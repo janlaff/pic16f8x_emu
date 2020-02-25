@@ -1,8 +1,6 @@
-mod data_bus;
-mod instruction;
+mod emulator;
 
-use data_bus::*;
-use instruction::*;
+use emulator::*;
 
 fn main() {
     println!("{:?}", Instruction::from(0b00_0111_0111_1111));

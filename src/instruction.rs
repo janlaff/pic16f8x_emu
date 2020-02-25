@@ -81,7 +81,7 @@ impl Instruction {
             InstructionCategory::ByteOriented => {
                 let file_register = FileRegister((opcode & 0b01111111) as u8);
                 let destination_flag = DestinationFlag((opcode & 0b10000000) > 0);
-                let selector = (opcode >> 8) as u8;
+                let selector = ((opcode >> 8) & 0b1111) as u8;
 
                 match selector {
                     0b0111 => Instruction::AddWf(file_register, destination_flag),
@@ -118,10 +118,13 @@ impl Instruction {
             InstructionCategory::BitOriented => {
                 let file_register = FileRegister((opcode & 0b01111111) as u8);
                 let bit_index = BitIndex(((opcode >> 7) & 0b00000111) as usize);
-                let selector = (opcode >> 10) as u8;
+                let selector = ((opcode >> 10) & 0b11) as u8;
 
-                // TODO
                 match selector {
+                    0b00 => Instruction::BcF(file_register, bit_index),
+                    0b01 => Instruction::BsF(file_register, bit_index),
+                    0b10 => Instruction::BtFsc(file_register, bit_index),
+                    0b11 => Instruction::BtFss(file_register, bit_index),
                     _ => panic!("Unknown opcode: {:04x}", opcode),
                 }
             }

@@ -77,9 +77,7 @@ impl Instruction {
         // Only accept properly formatted opcodes
         assert_eq!(opcode & 0xC000, 0);
 
-        let category = InstructionCategory::from((opcode >> 12) as u8);
-
-        match category {
+        match InstructionCategory::from((opcode >> 12) as u8) {
             InstructionCategory::ByteOriented => {
                 let file_register = FileRegister((opcode & 0b01111111) as u8);
                 let destination_flag = DestinationFlag((opcode & 0b10000000) > 0);

@@ -64,6 +64,8 @@ pub enum Instruction {
     Goto(Address),
     IorLw(Literal),
     MovLw(Literal),
+    RetFie,
+    RetLw(Literal),
     Return,
     Sleep,
     SubLw(Literal),
@@ -82,6 +84,7 @@ impl Instruction {
                 let file_register = FileRegister((opcode & 0b01111111) as u8);
                 let destination_flag = DestinationFlag((opcode & 0b10000000) > 0);
                 let selector = ((opcode >> 8) & 0b1111) as u8;
+                let sub_selector = (opcode & 0b1111) as u8;
 
                 match selector {
                     0b0111 => Instruction::AddWf(file_register, destination_flag),
@@ -104,7 +107,14 @@ impl Instruction {
                         if destination_flag.0 {
                             Instruction::MovWf(file_register)
                         } else {
-                            Instruction::Nop
+                            match sub_selector {
+                                0b0000 => Instruction::Nop,
+                                0b0100 => Instruction::ClearWdt,
+                                0b1001 => Instruction::RetFie,
+                                0b1000 => Instruction::Return,
+                                0b0011 => Instruction::Sleep,
+                                _ => panic!("Unknown opcode: {:04x}", opcode),
+                            }
                         }
                     }
                     0b1101 => Instruction::RlF(file_register, destination_flag),
@@ -130,19 +140,26 @@ impl Instruction {
             }
             InstructionCategory::LiteralOriented => {
                 let literal = Literal((opcode & 0b11111111) as u8);
-                let selector = (opcode >> 8) as u8;
+                let selector = ((opcode >> 8) & 0b1111) as u8;
 
-                // TODO
                 match selector {
+                    0b0000 | 0b0001 | 0b0010 | 0b0011 => Instruction::MovLw(literal),
+                    0b0100 | 0b0101 | 0b0110 | 0b0111 => Instruction::RetLw(literal),
+                    0b1100 | 0b1101 => Instruction::SubLw(literal),
+                    0b1111 | 0b1110 => Instruction::AddLw(literal),
+                    0b1010 => Instruction::XorLw(literal),
+                    0b1001 => Instruction::AndLw(literal),
+                    0b1000 => Instruction::IorLw(literal),
                     _ => panic!("Unknown opcode: {:04x}", opcode),
                 }
             }
             InstructionCategory::AddressOriented => {
                 let address = Address(opcode & 0b111_11111111);
-                let selector = (opcode >> 11) as u8;
+                let selector = ((opcode >> 11) & 0b1) as u8;
 
-                // TODO
                 match selector {
+                    0b0 => Instruction::Call(address),
+                    0b1 => Instruction::Goto(address),
                     _ => panic!("Unknown opcode: {:04x}", opcode),
                 }
             }

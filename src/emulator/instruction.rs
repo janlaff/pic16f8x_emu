@@ -75,7 +75,9 @@ pub enum Instruction {
 impl Instruction {
     pub fn from(opcode: u16) -> Result<Self, String> {
         // Only accept properly formatted opcodes
-        assert_eq!(opcode & 0xC000, 0);
+        if opcode & 0xc000 != 0 {
+            return Err(String::from("Invalid instruction encoding"));
+        }
 
         match InstructionCategory::from((opcode >> 12) as u8) {
             InstructionCategory::ByteOriented => {

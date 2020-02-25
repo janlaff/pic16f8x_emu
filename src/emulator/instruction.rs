@@ -28,7 +28,7 @@ impl InstructionCategory {
             0b01 => InstructionCategory::BitOriented,
             0b11 => InstructionCategory::LiteralOriented,
             0b10 => InstructionCategory::AddressOriented,
-            _ => panic!("Invalid instruction category: {:02x}", value),
+            _ => unreachable!("Invalid instruction category: {:02x}", value),
         }
     }
 }

@@ -1,4 +1,7 @@
+mod data_bus;
 mod instruction;
+
+use data_bus::*;
 use instruction::*;
 
 fn main() {

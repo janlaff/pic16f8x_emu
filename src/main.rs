@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate bitpat;
-
 mod instruction;
 use instruction::*;
 

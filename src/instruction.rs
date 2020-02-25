@@ -72,33 +72,42 @@ pub enum Instruction {
 
 impl Instruction {
     pub fn from(opcode: u16) -> Option<Self> {
+        // Only accept properly formatted opcodes
+        assert_eq!(opcode & 0xC000, 0);
+
         let category = InstructionCategory::from((opcode >> 12) as u8);
 
         match category {
             InstructionCategory::ByteOriented => {
                 let file_register = FileRegister((opcode & 0b01111111) as u8);
                 let destination_flag = DestinationFlag((opcode & 0b10000000) > 0);
+                let selector = (opcode >> 7) as u8;
 
                 // TODO
+                None
             }
             InstructionCategory::BitOriented => {
                 let file_register = FileRegister((opcode & 0b01111111) as u8);
                 let bit_index = BitIndex(((opcode >> 7) & 0b00000111) as usize);
+                let selector = (opcode >> 9) as u8;
 
                 // TODO
+                None
             }
             InstructionCategory::LiteralOriented => {
                 let literal = Literal((opcode & 0b11111111) as u8);
+                let selector = (opcode >> 7) as u8;
 
                 // TODO
+                None
             }
             InstructionCategory::AddressOriented => {
                 let address = Address(opcode & 0b111_11111111);
+                let selector = (opcode >> 10) as u8;
 
                 // TODO
+                None
             }
         }
-
-        None
     }
 }

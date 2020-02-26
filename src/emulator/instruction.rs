@@ -154,13 +154,13 @@ impl Instruction {
                 }
             }
             InstructionCategory::AddressOriented => {
-                let address = Address(opcode & 0b111_11111111);
+                let address = Address(opcode & 0b111_1111_1111);
                 let selector = ((opcode >> 11) & 0b1) as u8;
 
                 match selector {
                     0b0 => Ok(Instruction::Call(address)),
                     0b1 => Ok(Instruction::Goto(address)),
-                    _ => Err(format!("Unknown opcode: {:04x}", opcode)),
+                    _ => unreachable!("Unknown opcode: {:04x}", opcode),
                 }
             }
         }

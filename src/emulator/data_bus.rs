@@ -43,6 +43,14 @@ impl DataBus {
         }
     }
 
+    pub fn load_pc(&mut self, value: u16) {
+        // When loading pc from GOTO or CALL instruction
+        // The upper two bits are being ignored
+        // -> only 11 bits from value are loaded
+        self.pclath = (self.pclath & 0b11000) | ((value >> 8) as u8 & 0b00111);
+        self.pcl = value as u8;
+    }
+
     pub fn get_pc(&self) -> u16 {
         join_bytes(self.pclath & 0b11111, self.pcl)
     }

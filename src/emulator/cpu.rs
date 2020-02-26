@@ -1,4 +1,5 @@
 use super::data_bus::*;
+use super::instruction::*;
 use super::rom_bus::*;
 
 pub struct CPU {
@@ -24,10 +25,21 @@ impl CPU {
 
         if let Ok(instr) = result {
             println!("Executing {:?}", instr);
+            self.execute(instr);
         } else {
             eprintln!("Error: {}", result.err().unwrap());
         }
 
-        self.data_bus.inc_pc(2);
+        // If jump was performed one additional cycle has to be added
+        self.cycles += if self.data_bus.get_pc() != pc {
+            2
+        } else {
+            self.data_bus.inc_pc(2);
+            1
+        };
+    }
+
+    fn execute(&mut self, instruction: Instruction) {
+        // TODO: Implement instructions
     }
 }

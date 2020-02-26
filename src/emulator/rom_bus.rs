@@ -57,7 +57,7 @@ impl RomBus {
     }
 
     fn read_word(&self, address: u16) -> u16 {
-        // TODO: check endianess
+        // Instruction are encoded in big endian
         join_bytes(self.read_byte(address), self.read_byte(address + 1))
     }
 }

@@ -1,10 +1,13 @@
 #[macro_use]
 extern crate log;
 
+extern crate simple_logger;
+
 mod emulator;
 use emulator::*;
 
 fn main() {
+    simple_logger::init().unwrap();
     info!("Starting PIC16F8X emulator");
 
     let mut cpu = CPU::new();

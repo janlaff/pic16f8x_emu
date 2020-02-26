@@ -30,6 +30,8 @@ impl RomBus {
     }
 
     pub fn read_instruction(&mut self, address: u16) -> Result<Instruction, String> {
+        debug!("Loading instruction at address {:04x}", address);
+
         if address > self.max_rom_addr || address < self.min_rom_addr {
             return Err(format!(
                 "Tried to execute arbitrary data as code at address {:04x}",
@@ -43,8 +45,14 @@ impl RomBus {
         if let Some(instr) = self.cache.get(&address) {
             Ok(*instr)
         } else {
-            let decoded = Instruction::from(self.read_word(address));
+            let opcode = self.read_word(address);
+            debug!(
+                "Opcode {:04x} not found in instruction cache! Trying to decode...",
+                opcode
+            );
+            let decoded = Instruction::from(opcode);
             if let Ok(instr) = decoded {
+                debug!("Opcode {:04x} decoded to {:?}", opcode, instr);
                 self.cache.insert(address, instr);
             }
             decoded
@@ -56,7 +64,9 @@ impl RomBus {
     }
 
     fn read_byte(&self, address: u16) -> u8 {
-        self.rom[address as usize]
+        let result = self.rom[address as usize];
+        debug!("Reading address {:04x} from rom -> {:02x}", address, result);
+        result
     }
 
     fn read_word(&self, address: u16) -> u16 {

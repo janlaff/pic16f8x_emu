@@ -11,7 +11,7 @@ pub const DC: usize = 1;
 pub const C: usize = 0;
 
 pub struct DataBus {
-    memory: [u8; 0x7f],
+    memory: [u8; 0x80],
     indirect: u8,
     pcl: u8,
     status: u8,
@@ -33,7 +33,7 @@ pub struct DataBus {
 impl DataBus {
     pub fn new() -> Self {
         Self {
-            memory: [0; 0x7f],
+            memory: [0; 0x80],
             indirect: 0,
             pcl: 0,
             status: 0,
@@ -74,6 +74,8 @@ impl DataBus {
     }
 
     fn map_address(&mut self, address: u16) -> &mut u8 {
+        assert!(address < 0x80);
+
         if util::get_bit(self.status, RP0) {
             // Bank 1 is used
             match address {

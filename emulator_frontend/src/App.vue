@@ -14,21 +14,18 @@ export default {
   components: { MemoryViewer },
   data () {
     return {
-      userMem: ['lol']
+      userMem: readEngineMem(engine.ram(), engine.ram_size())
     }
-  },
-  mounted () {
-    this.refreshRam()
   },
   methods: {
     runExample () {
       engine.run_example()
-      this.refreshRam()
+
+      this.userMem = readEngineMem(engine.ram(), engine.ram_size())
+
+      const sfr_bank = engine.read_sfrs()
+      console.log(sfr_bank)
     },
-    refreshRam () {
-      const mem = readEngineMem(engine.ram(), engine.ram_size())
-      this.userMem = mem
-    }
   }
 }
 </script>

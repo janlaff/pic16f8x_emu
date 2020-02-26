@@ -3,10 +3,11 @@ extern crate log;
 
 extern crate console_log;
 
+use wasm_bindgen::prelude::*;
+use crate::emulator::SFRBank;
+
 mod emulator;
 mod utils;
-
-use wasm_bindgen::prelude::*;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -39,6 +40,12 @@ impl EmulatorEngine {
 
     pub fn run_example(&mut self) {
         self.cpu.data_bus.write_byte(0x7f, 0xFF);
+        debug!("Status is {:02x}", self.cpu.data_bus.sfr_bank.status);
+        self.cpu.data_bus.sfr_bank.status += 1;
+    }
+
+    pub fn read_sfrs(&self) -> SFRBank {
+        self.cpu.data_bus.sfr_bank
     }
 
     pub fn ram(&self) -> *const u8 {

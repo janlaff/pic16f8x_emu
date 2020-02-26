@@ -1,5 +1,7 @@
-mod emulator;
+#[macro_use]
+extern crate log;
 
+mod emulator;
 use emulator::*;
 
 fn main() {

@@ -65,10 +65,6 @@ impl DataBus {
         self.set_pc(self.get_pc().wrapping_add(amount));
     }
 
-    pub fn read_byte(&mut self, address: u8) -> u8 {
-        *self.map_address(address)
-    }
-
     pub fn get_bit(&mut self, address: u8, bit: usize) -> bool {
         get_bit(*self.map_address(address), bit)
     }
@@ -81,12 +77,20 @@ impl DataBus {
         set_bit(self.map_address(address), bit);
     }
 
+    pub fn read_byte(&mut self, address: u8) -> u8 {
+        let value = *self.map_address(address);
+        debug!("Reading {:02x} from {:02x}", value, address);
+        value
+    }
+
     pub fn write_byte(&mut self, address: u8, value: u8) {
-        *self.map_address(address) = value;
+        let real_addr = self.map_address(address);
+        debug!("Writing {:02x} to {:02x}", value, address);
+        *real_addr = value;
     }
 
     fn map_address(&mut self, address: u8) -> &mut u8 {
-        assert!(address < 0x80);
+        assert!((address as usize) < self.memory.len());
 
         if get_bit(self.status, RP0) {
             // Bank 1 is used

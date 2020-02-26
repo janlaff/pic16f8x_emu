@@ -37,16 +37,20 @@ impl EmulatorEngine {
         tmp
     }
 
+    pub fn run_example(&mut self) {
+        self.cpu.data_bus.write_byte(0x7f, 0xFF);
+    }
+
+    pub fn ram(&self) -> *const u8 {
+        self.cpu.data_bus.memory.as_ptr()
+    }
+
     pub fn ram_size(&self) -> usize {
         self.cpu.data_bus.memory.len()
     }
 
     pub fn rom_size(&self) -> usize {
         self.cpu.rom_bus.rom.len()
-    }
-
-    pub fn ram(&self) -> *const u8 {
-        self.cpu.data_bus.memory.as_ptr()
     }
 
     pub fn rom(&self) -> *const u8 {

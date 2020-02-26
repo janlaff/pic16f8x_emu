@@ -17,4 +17,17 @@ impl CPU {
             rom_bus: RomBus::new(),
         }
     }
+
+    pub fn step(&mut self) {
+        let pc = self.data_bus.get_pc();
+        let result = self.rom_bus.read_instruction(pc);
+
+        if let Ok(instr) = result {
+            println!("Executing {:?}", instr);
+        } else {
+            eprintln!("Error: {}", result.err().unwrap());
+        }
+
+        self.data_bus.inc_pc(2);
+    }
 }

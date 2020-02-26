@@ -10,7 +10,8 @@ fn main() {
 
     rom_bus.load_program(include_bytes!("../SimTest01.bin"), 0x0000);
 
-    for i in (0u16..rom_bus.get_max_rom_addr()).step_by(2) {
+    let (min, max) = rom_bus.get_rom_boundary();
+    for i in (min..max).step_by(2) {
         println!("{:04x}: {:?}", i, rom_bus.read_instruction(i).unwrap());
     }
 }

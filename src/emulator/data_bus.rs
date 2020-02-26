@@ -1,7 +1,7 @@
 use super::bits::*;
 
 pub struct DataBus {
-    memory: [u8; 0x80],
+    pub memory: [u8; 0x80],
     pub indirect: u8,
     pub pcl: u8,
     pub status: u8,

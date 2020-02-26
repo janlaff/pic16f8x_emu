@@ -4,7 +4,7 @@ use super::bits::*;
 use super::instruction::*;
 
 pub struct RomBus {
-    rom: [u8; 0xffff],
+    pub rom: [u8; 0xffff],
     min_rom_addr: u16,
     max_rom_addr: u16,
     cache: HashMap<u16, Instruction>,

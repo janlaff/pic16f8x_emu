@@ -1,5 +1,5 @@
 [package]
-name = "pic16f8x_emu"
+name = "emulator_engine"
 version = "0.1.0"
 authors = ["Jan Lafferton <jla@jcbachmann.de>"]
 edition = "2018"

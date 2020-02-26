@@ -20,15 +20,15 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-struct EmulationEngine {
+struct EmulatorEngine {
     cpu: emulator::CPU,
 }
 
 #[wasm_bindgen]
-impl EmulationEngine {
+impl EmulatorEngine {
     pub fn new() -> Self {
         console_log::init_with_level(log::Level::Debug).unwrap();
-        info!("Initialising PIC16F8X emulation engine");
+        info!("Initialising PIC16F8X emulator engine");
 
         let mut tmp = Self {
             cpu: emulator::CPU::new(),

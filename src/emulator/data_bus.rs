@@ -1,26 +1,16 @@
-use super::util;
-
-// Bit constants for status register
-pub const IRP: usize = 7;
-pub const RP1: usize = 6;
-pub const RP0: usize = 5;
-pub const TO: usize = 4;
-pub const PD: usize = 3;
-pub const Z: usize = 2;
-pub const DC: usize = 1;
-pub const C: usize = 0;
+use super::bits::*;
 
 pub struct DataBus {
     memory: [u8; 0x80],
-    indirect: u8,
-    pcl: u8,
-    status: u8,
-    fsr: u8,
-    pclath: u8,
-    intcon: u8,
-    tmr0: u8,
-    porta: u8,
-    portb: u8,
+    pub indirect: u8,
+    pub pcl: u8,
+    pub status: u8,
+    pub fsr: u8,
+    pub pclath: u8,
+    pub intcon: u8,
+    pub tmr0: u8,
+    pub porta: u8,
+    pub portb: u8,
     eedata: u8,
     eeadr: u8,
     option: u8,
@@ -53,20 +43,29 @@ impl DataBus {
         }
     }
 
+    pub fn get_pc(&self) -> u16 {
+        join_bytes(self.pclath & 0b11111, self.pcl)
+    }
+
+    pub fn set_pc(&mut self, value: u16) {
+        self.pclath = ((value >> 8) & 0b11111) as u8;
+        self.pcl = value as u8;
+    }
+
     pub fn read_byte(&mut self, address: u16) -> u8 {
         *self.map_address(address)
     }
 
     pub fn get_bit(&mut self, address: u16, bit: usize) -> bool {
-        util::get_bit(*self.map_address(address), bit)
+        get_bit(*self.map_address(address), bit)
     }
 
     pub fn clear_bit(&mut self, address: u16, bit: usize) {
-        util::clear_bit(self.map_address(address), bit);
+        clear_bit(self.map_address(address), bit);
     }
 
     pub fn set_bit(&mut self, address: u16, bit: usize) {
-        util::set_bit(self.map_address(address), bit);
+        set_bit(self.map_address(address), bit);
     }
 
     pub fn write_byte(&mut self, address: u16, value: u8) {
@@ -76,7 +75,7 @@ impl DataBus {
     fn map_address(&mut self, address: u16) -> &mut u8 {
         assert!(address < 0x80);
 
-        if util::get_bit(self.status, RP0) {
+        if get_bit(self.status, RP0) {
             // Bank 1 is used
             match address {
                 0x00 => &mut self.indirect,

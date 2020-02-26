@@ -35,6 +35,9 @@ impl RomBus {
                 "Tried to execute arbitrary data as code at address {:04x}",
                 address
             ));
+        } else if address % 2 != 0 {
+            // TODO: check if this rule applies for roms
+            return Err(format!("Address {:04x} is not dividable by 2", address));
         }
 
         if let Some(instr) = self.cache.get(&address) {

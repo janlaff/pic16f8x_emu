@@ -5,7 +5,7 @@ mod emulator;
 use emulator::*;
 
 fn main() {
-    println!("[*] Starting PIC16F8X Emulator");
+    info!("Starting PIC16F8X emulator");
 
     let mut cpu = CPU::new();
     cpu.rom_bus

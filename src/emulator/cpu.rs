@@ -24,10 +24,10 @@ impl CPU {
         let result = self.rom_bus.read_instruction(pc);
 
         if let Ok(instr) = result {
-            println!("Executing {:?}", instr);
+            debug!("Executing {:?}", instr);
             self.execute(instr);
         } else {
-            eprintln!("Error: {}", result.err().unwrap());
+            error!("Error: {}", result.err().unwrap());
         }
 
         // If jump was performed one additional cycle has to be added

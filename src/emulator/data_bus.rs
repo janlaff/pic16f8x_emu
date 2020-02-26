@@ -11,13 +11,13 @@ pub struct DataBus {
     pub tmr0: u8,
     pub porta: u8,
     pub portb: u8,
-    eedata: u8,
-    eeadr: u8,
-    option: u8,
-    trisa: u8,
-    trisb: u8,
-    eecon1: u8,
-    eecon2: u8,
+    pub eedata: u8,
+    pub eeadr: u8,
+    pub option: u8,
+    pub trisa: u8,
+    pub trisb: u8,
+    pub eecon1: u8,
+    pub eecon2: u8,
 }
 
 impl DataBus {
@@ -50,6 +50,10 @@ impl DataBus {
     pub fn set_pc(&mut self, value: u16) {
         self.pclath = ((value >> 8) & 0b11111) as u8;
         self.pcl = value as u8;
+    }
+
+    pub fn inc_pc(&mut self, amount: u16) {
+        self.set_pc(self.get_pc().wrapping_add(amount));
     }
 
     pub fn read_byte(&mut self, address: u16) -> u8 {

@@ -30,7 +30,7 @@ impl RomBus {
     }
 
     pub fn read_instruction(&mut self, address: u16) -> Result<Instruction, String> {
-        if address > self.max_rom_addr {
+        if address > self.max_rom_addr || address < self.min_rom_addr {
             return Err(format!(
                 "Tried to execute arbitrary data as code at address {:04x}",
                 address

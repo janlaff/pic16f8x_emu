@@ -12,6 +12,8 @@ fn main() {
 
     let (min, max) = rom_bus.get_rom_boundary();
     for i in (min..max).step_by(2) {
-        println!("{:04x}: {:?}", i, rom_bus.read_instruction(i).unwrap());
+        if let Ok(instr) = rom_bus.read_instruction(i) {
+            println!("{:04x}: {:?}", i, instr);
+        }
     }
 }

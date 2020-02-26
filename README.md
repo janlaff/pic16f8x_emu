@@ -17,10 +17,16 @@ This is my personal implementation of an emulator for the PIC16F8X architecture.
 - wasm-pack (`cargo install wasm-pack`)
 - npm (https://nodejs.org/en/) 
 
-## Build
+## Build & Run
+### Build emulator engine
 ```
+$ cd emulator_engine
 $ wasm-pack build
-$ cd www
+```
+
+### Run frontend
+```
+$ cd vue-frontend
 $ npm install
-$ npm run start
+$ npm run serve
 ```

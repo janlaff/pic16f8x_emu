@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "description": "create an app to consume rust-generated wasm packages",
   "main": "index.js",
-  "bin": {
-    "create-wasm-app": ".bin/create-wasm-app.js"
-  },
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "start": "webpack-dev-server"
@@ -23,6 +20,7 @@
   },
   "homepage": "https://github.com/rustwasm/create-wasm-app#readme",
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.12.1",
     "autoprefixer": "^9.7.4",
     "copy-webpack-plugin": "^5.0.0",
     "css-loader": "^3.4.2",
@@ -38,7 +36,7 @@
   "dependencies": {
     "bootstrap": "^4.4.1",
     "jquery": "^3.4.1",
-    "popper.js": "^1.16.1",
-    "pic16f8x_emu": "file:../pkg"
+    "pic16f8x_emu": "file:../pkg",
+    "popper.js": "^1.16.1"
   }
 }

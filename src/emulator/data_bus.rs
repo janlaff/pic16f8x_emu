@@ -56,27 +56,27 @@ impl DataBus {
         self.set_pc(self.get_pc().wrapping_add(amount));
     }
 
-    pub fn read_byte(&mut self, address: u16) -> u8 {
+    pub fn read_byte(&mut self, address: u8) -> u8 {
         *self.map_address(address)
     }
 
-    pub fn get_bit(&mut self, address: u16, bit: usize) -> bool {
+    pub fn get_bit(&mut self, address: u8, bit: usize) -> bool {
         get_bit(*self.map_address(address), bit)
     }
 
-    pub fn clear_bit(&mut self, address: u16, bit: usize) {
+    pub fn clear_bit(&mut self, address: u8, bit: usize) {
         clear_bit(self.map_address(address), bit);
     }
 
-    pub fn set_bit(&mut self, address: u16, bit: usize) {
+    pub fn set_bit(&mut self, address: u8, bit: usize) {
         set_bit(self.map_address(address), bit);
     }
 
-    pub fn write_byte(&mut self, address: u16, value: u8) {
+    pub fn write_byte(&mut self, address: u8, value: u8) {
         *self.map_address(address) = value;
     }
 
-    fn map_address(&mut self, address: u16) -> &mut u8 {
+    fn map_address(&mut self, address: u8) -> &mut u8 {
         assert!(address < 0x80);
 
         if get_bit(self.status, RP0) {

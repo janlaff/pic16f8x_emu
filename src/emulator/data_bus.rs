@@ -56,6 +56,7 @@ impl DataBus {
     }
 
     pub fn set_pc(&mut self, value: u16) {
+        // TODO: check if this is event needed
         self.pclath = ((value >> 8) & 0b11111) as u8;
         self.pcl = value as u8;
     }

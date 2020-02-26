@@ -1,2 +1,12 @@
 # pic16f8x_emu
-PIC16F8X Simulator for studying purposes
+This is my personal implementation of an emulator for the PIC16F8X architecture.
+
+Planned Features:
+- Working cpu emulation
+- Working user interface (GUI)
+
+CPU Emulation:
+- [PIC16F8X Datasheet](https://moodle.dhbw.de/pluginfile.php/95874/mod_resource/content/2/PIC16F8x.pdf)
+
+User Interface:
+- Probably HTML through [WebAssembly](https://webassembly.org/)

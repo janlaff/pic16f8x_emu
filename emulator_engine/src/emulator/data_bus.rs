@@ -22,8 +22,9 @@ pub struct SFRBank {
     pub eecon2: u8,
 }
 
+#[wasm_bindgen]
 impl SFRBank {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             indirect: 0,
             pcl: 0,

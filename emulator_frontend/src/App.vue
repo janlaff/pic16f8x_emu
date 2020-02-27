@@ -2,19 +2,23 @@
   <div id="app">
     <button @click="runExample">Run example</button>
     <MemoryViewer :buffer="userMem"></MemoryViewer>
+    <SFRViewer :bank="sfrBank"></SFRViewer>
   </div>
 </template>
 
 <script>
 import MemoryViewer from "./components/MemoryViewer"
+import SFRViewer from "./components/SFRViewer"
 import {engine, readEngineMem} from "./emulator"
+import {SFRBank} from "emulator_engine"
 
 export default {
   name: 'App',
-  components: { MemoryViewer },
+  components: { MemoryViewer, SFRViewer },
   data () {
     return {
-      userMem: readEngineMem(engine.ram(), engine.ram_size())
+      userMem: readEngineMem(engine.ram(), engine.ram_size()),
+      sfrBank: SFRBank.new(),
     }
   },
   methods: {
@@ -22,9 +26,7 @@ export default {
       engine.run_example()
 
       this.userMem = readEngineMem(engine.ram(), engine.ram_size())
-
-      const sfr_bank = engine.read_sfrs()
-      console.log(sfr_bank)
+      this.sfrBank = engine.read_sfrs()
     },
   }
 }

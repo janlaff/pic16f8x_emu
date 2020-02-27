@@ -42,7 +42,9 @@ impl EmulatorEngine {
     }
 
     pub fn load_lst_file(&mut self, content: &str) {
-        self.parser = Some(LstParser::from_lst_file(String::from(content)));
+        let parser = LstParser::from_lst_file(String::from(content));
+        self.cpu.rom_bus.load_program(parser.bytecode.as_slice(), 0);
+        self.parser = Some(parser);
     }
 
     pub fn get_debug_info_line_count(&self) -> usize {

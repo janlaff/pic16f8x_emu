@@ -1,12 +1,12 @@
 <template>
-  <v-btn-toggle v-model="toggle_one" class="ma-5">
-    <v-btn fab small color="primary" @click="$emit('play')">
+  <v-btn-toggle class="ma-5">
+    <v-btn fab small color="primary" @click="$root.$emit('play')">
       <v-icon color="white">mdi-play</v-icon>
     </v-btn>
-    <v-btn fab small color="primary" @click="$emit('stop')">
+    <v-btn fab small color="primary" @click="$root.$emit('stop')">
       <v-icon color="white">mdi-stop</v-icon>
     </v-btn>
-    <v-btn fab small color="primary" @click="$emit('folder')">
+    <v-btn fab small color="primary" @click="$root.$emit('folder')">
       <v-icon color="white">mdi-folder</v-icon>
     </v-btn>
     <!--<b-button @click="$emit('play')" variant="success">

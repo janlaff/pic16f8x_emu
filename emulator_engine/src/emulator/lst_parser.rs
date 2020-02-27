@@ -21,8 +21,8 @@ impl LstParser {
     }
 
     pub fn from_lst_file(data: String) -> Self {
-        let command_rgx = Regex::new(r"^(\d{4})\s(\d{4})\s+\d+\s{2}(.*)$").unwrap();
-        let info_rgx = Regex::new(r"^\s+\d+\s{2}(\s*\S.+)$").unwrap();
+        let command_rgx = Regex::new(r"^(\d{4})\s(\d{4})\s+\d+\s{2}(\S*)\s+(.*)$").unwrap();
+        let info_rgx = Regex::new(r"^\s+\d{5}\s{2}(\S*)\s+(\S.*)$").unwrap();
 
         let mut address_info = HashMap::new();
         let mut content = Vec::new();
@@ -33,9 +33,10 @@ impl LstParser {
             for cap in command_rgx.captures(line) {
                 let address = u16::from_str_radix(&cap[1], 16).unwrap();
                 let opcode = u16::from_str_radix(&cap[2], 16).unwrap();
-                let info = String::from(&cap[3]);
+                let label = String::from(&cap[3]);
+                let info = String::from(&cap[4]);
 
-                content.push((info, String::new()));
+                content.push((label, info));
                 address_info.insert(address, content.len() - 1);
                 bytecode.push(get_high_byte(opcode));
                 bytecode.push(get_low_byte(opcode));
@@ -45,7 +46,7 @@ impl LstParser {
 
             if !found {
                 for cap in info_rgx.captures(line) {
-                    content.push((String::from(&cap[1]), String::new()));
+                    content.push((String::from(&cap[1]), String::from(&cap[2])));
                 }
             }
         }

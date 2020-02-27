@@ -23,16 +23,24 @@ export default {
       sfrBank: SFRBank.new()
     };
   },
+  mounted () {
+    this.$root.$on('play', this.runExample)
+    this.$root.$on('stop', this.runExample2)
+  },
   methods: {
     runExample() {
       engine.run_example();
 
       this.userMem = readEngineMem(engine.ram(), engine.ram_size());
       this.sfrBank = engine.read_sfrs();
+
+      this.$root.$emit('selected-line-update', this.sfrBank.status)
     },
     runExample2() {
       engine.set_status(0);
       this.sfrBank = engine.read_sfrs();
+
+      this.$root.$emit('selected-line-update', 0)
     }
   }
 };

@@ -1,10 +1,11 @@
 #[macro_use]
 extern crate log;
-
 extern crate console_log;
+extern crate hex;
+extern crate regex;
 
+use crate::emulator::LstParser;
 use wasm_bindgen::prelude::*;
-use crate::emulator::SFRBank;
 
 mod emulator;
 mod utils;
@@ -23,6 +24,7 @@ extern "C" {
 #[wasm_bindgen]
 struct EmulatorEngine {
     cpu: emulator::CPU,
+    parser: Option<emulator::LstParser>,
 }
 
 #[wasm_bindgen]
@@ -33,9 +35,30 @@ impl EmulatorEngine {
 
         let mut tmp = Self {
             cpu: emulator::CPU::new(),
+            parser: None,
         };
 
         tmp
+    }
+
+    pub fn load_lst_file(&mut self, content: &str) {
+        self.parser = Some(LstParser::from_lst_file(String::from(content)));
+    }
+
+    pub fn get_debug_info_line_count(&self) -> usize {
+        if let Some(parser) = &self.parser {
+            parser.content.len()
+        } else {
+            0
+        }
+    }
+
+    pub fn get_debug_info_line(&self, index: usize) -> String {
+        if let Some(parser) = &self.parser {
+            parser.content[index].1.clone()
+        } else {
+            String::from("Something veryyy wrong happened")
+        }
     }
 
     pub fn run_example(&mut self) {
@@ -44,8 +67,12 @@ impl EmulatorEngine {
         self.cpu.data_bus.sfr_bank.status += 1;
     }
 
-    pub fn read_sfrs(&self) -> SFRBank {
+    pub fn read_sfrs(&self) -> emulator::SFRBank {
         self.cpu.data_bus.sfr_bank
+    }
+
+    pub fn set_status(&mut self, value: u8) {
+        self.cpu.data_bus.sfr_bank.status = value;
     }
 
     pub fn ram(&self) -> *const u8 {
@@ -65,14 +92,24 @@ impl EmulatorEngine {
     }
 }
 
-/*#[wasm_bindgen]
-pub fn initialize_emulator() {
+#[test]
+fn disassemble_rom() {
     let mut cpu = emulator::CPU::new();
     cpu.rom_bus
-        .load_program(include_bytes!("../SimTest02.bin"), 0);
+        .load_program(include_bytes!("../SimTest01.bin"), 0);
     let (min, max) = cpu.rom_bus.get_rom_boundary();
 
     while cpu.data_bus.get_pc() <= max {
         cpu.step();
     }
-}*/
+}
+
+#[test]
+fn disassemble_lst_file() {
+    let file = include_str!("../SimTest01.LST");
+    let mut parser = LstParser::from_lst_file(String::from(file));
+
+    for (address, index) in parser.address_info {
+        println!("{:04x} -> {} = ({})", address, index, parser.content[index]);
+    }
+}

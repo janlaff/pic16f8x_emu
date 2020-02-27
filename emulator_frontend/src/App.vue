@@ -24,24 +24,25 @@ export default {
     };
   },
   mounted () {
-    this.$root.$on('play', this.runExample)
-    this.$root.$on('stop', this.runExample2)
+    this.$root.$on('play', this.play)
+    this.$root.$on('stop', this.stop)
   },
   methods: {
-    runExample() {
-      engine.run_example();
+    play() {
+      this.pc = engine.run_step()
+      this.userMem = readEngineMem(engine.ram(), engine.ram_size())
+      this.sfrBank = engine.read_sfrs()
 
-      this.userMem = readEngineMem(engine.ram(), engine.ram_size());
-      this.sfrBank = engine.read_sfrs();
-
-      this.$root.$emit('selected-line-update', this.sfrBank.status)
+      this.$root.$emit('selected-line-update', this.pc)
     },
-    runExample2() {
-      engine.set_status(0);
-      this.sfrBank = engine.read_sfrs();
+    stop() {
+      this.pc = engine.reset()
 
-      this.$root.$emit('selected-line-update', 0)
-    }
+      this.userMem = readEngineMem(engine.ram(), engine.ram_size())
+      this.sfrBank = engine.read_sfrs()
+
+      this.$root.$emit('selected-line-update', this.pc)
+    },
   }
 };
 </script>

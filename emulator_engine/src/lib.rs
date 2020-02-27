@@ -41,6 +41,35 @@ impl EmulatorEngine {
         tmp
     }
 
+    pub fn run_step(&mut self) -> usize {
+        self.cpu.step();
+
+        if let Some(parser) = &self.parser {
+            if let Some(idx) = parser.address_info.get(&self.cpu.data_bus.get_pc()) {
+                *idx
+            } else {
+                0
+            }
+        } else {
+            0
+        }
+    }
+
+    pub fn reset(&mut self) -> usize {
+        let (start_addr, _) = self.cpu.rom_bus.get_rom_boundary();
+        self.cpu.data_bus.set_pc(start_addr);
+
+        if let Some(parser) = &self.parser {
+            if let Some(idx) = parser.address_info.get(&start_addr) {
+                *idx
+            } else {
+                0
+            }
+        } else {
+            0
+        }
+    }
+
     pub fn load_lst_file(&mut self, content: &str) {
         let parser = LstParser::from_lst_file(String::from(content));
         self.cpu.rom_bus.load_program(parser.bytecode.as_slice(), 0);

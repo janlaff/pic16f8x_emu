@@ -2,11 +2,6 @@ import Vue from 'vue'
 import vuetify from "./plugins/vuetify"
 import App from './App.vue'
 
-// Bootstrap setup
-import { BootstrapVue } from 'bootstrap-vue'
-import './assets/scss/main.scss'
-Vue.use(BootstrapVue)
-
 // Fontawesome setup
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faPlay, faStop, faFolder } from '@fortawesome/free-solid-svg-icons'
@@ -20,7 +15,7 @@ library.add({
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
-Vue.config.productionTip  = false
+Vue.config.productionTip = false
 
 new Vue({
   render: h => h(App),

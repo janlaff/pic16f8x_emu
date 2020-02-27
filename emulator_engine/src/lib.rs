@@ -61,6 +61,14 @@ impl EmulatorEngine {
         }
     }
 
+    pub fn get_debug_info_line_label(&self, index: usize) -> String {
+        if let Some(parser) = &self.parser {
+            parser.content[index].0.clone()
+        } else {
+            String::from("Something veryyy wrong happened")
+        }
+    }
+
     pub fn run_example(&mut self) {
         self.cpu.data_bus.write_byte(0x7f, 0xFF);
         debug!("Status is {:02x}", self.cpu.data_bus.sfr_bank.status);
@@ -110,6 +118,10 @@ fn disassemble_lst_file() {
     let mut parser = LstParser::from_lst_file(String::from(file));
 
     for (address, index) in parser.address_info {
-        println!("{:04x} -> {} = ({})", address, index, parser.content[index]);
+        println!("{:04x} -> {} = ('{}' - '{}')", address, index, parser.content[index].0, parser.content[index].1);
+    }
+
+    for (label, command) in parser.content {
+        println!("label: '{}', command: '{}'", label, command)
     }
 }

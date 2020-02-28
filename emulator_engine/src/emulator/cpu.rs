@@ -19,7 +19,7 @@ impl CPU {
         }
     }
 
-    pub fn step(&mut self) {
+    pub fn step(&mut self) -> Result<(), String> {
         let pc = self.data_bus.get_pc();
         let result = self.rom_bus.read_instruction(pc);
 
@@ -27,7 +27,7 @@ impl CPU {
             debug!("Executing {:?}", instr);
             self.execute(instr);
         } else {
-            error!("Error: {}", result.err().unwrap());
+            return Err(result.err().unwrap());
         }
 
         // If jump was performed one additional cycle has to be added
@@ -37,6 +37,8 @@ impl CPU {
             self.data_bus.inc_pc(2);
             1
         };
+
+        Ok(())
     }
 
     fn execute(&mut self, instruction: Instruction) {

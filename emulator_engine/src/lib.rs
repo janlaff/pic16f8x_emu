@@ -42,7 +42,9 @@ impl EmulatorEngine {
     }
 
     pub fn run_step(&mut self) -> usize {
-        self.cpu.step();
+        if let Err(msg) = self.cpu.step() {
+            alert(msg.as_str());
+        }
 
         if let Some(parser) = &self.parser {
             if let Some(idx) = parser.address_info.get(&self.cpu.data_bus.get_pc()) {

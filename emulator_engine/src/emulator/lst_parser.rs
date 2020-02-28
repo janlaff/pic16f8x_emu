@@ -21,8 +21,9 @@ impl LstParser {
     }
 
     pub fn from_lst_file(data: String) -> Self {
+        // TODO: Better regexes
         let command_rgx = Regex::new(r"^(\d{4})\s(\d{4})\s+\d+\s{2}(\S*)\s+(.*)$").unwrap();
-        let info_rgx = Regex::new(r"^\s+\d{5}\s{2}(\S*)\s+(\S.*)$").unwrap();
+        let info_rgx = Regex::new(r"^[^\S\r\n]{20}\d{5}[^\S\r\n]{2}(\S*)[^\S\r\n]+(.*)$").unwrap();
 
         let mut address_info = HashMap::new();
         let mut content = Vec::new();
@@ -40,13 +41,14 @@ impl LstParser {
                 content.push((label, info));
                 bytecode.push(get_high_byte(opcode));
                 bytecode.push(get_low_byte(opcode));
-
                 found = true;
             }
 
             if !found {
                 for cap in info_rgx.captures(line) {
-                    content.push((String::from(&cap[1]), String::from(&cap[2])));
+                    if &cap[1] != "" || &cap[2] != "" {
+                        content.push((String::from(&cap[1]), String::from(&cap[2])));
+                    }
                 }
             }
         }

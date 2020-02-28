@@ -24,24 +24,24 @@ export default {
     };
   },
   mounted () {
-    this.$root.$on('play', this.play)
+    this.$root.$on('step', this.play)
     this.$root.$on('stop', this.stop)
   },
   methods: {
     play() {
-      this.pc = engine.run_step()
+      let pc = engine.run_step()
       this.userMem = readEngineMem(engine.ram(), engine.ram_size())
       this.sfrBank = engine.read_sfrs()
 
-      this.$root.$emit('selected-line-update', this.pc)
+      this.$root.$emit('selected-line-update', pc)
     },
     stop() {
-      this.pc = engine.reset()
+      let pc = engine.reset()
 
       this.userMem = readEngineMem(engine.ram(), engine.ram_size())
       this.sfrBank = engine.read_sfrs()
 
-      this.$root.$emit('selected-line-update', this.pc)
+      this.$root.$emit('selected-line-update', pc)
     },
   }
 };

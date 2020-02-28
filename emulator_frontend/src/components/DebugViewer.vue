@@ -35,7 +35,6 @@ export default {
   },
   mounted () {
     this.fetchLines()
-
     this.$root.$on('selected-line-update', this.selectLine)
   },
   methods: {

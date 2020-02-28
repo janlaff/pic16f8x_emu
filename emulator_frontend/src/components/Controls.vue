@@ -3,6 +3,9 @@
     <v-btn fab small color="primary" @click="$root.$emit('play')">
       <v-icon color="white">mdi-play</v-icon>
     </v-btn>
+    <v-btn fab small color="primary" @click="$root.$emit('step')">
+      <v-icon color="white">mdi-step-forward</v-icon>
+    </v-btn>
     <v-btn fab small color="primary" @click="$root.$emit('stop')">
       <v-icon color="white">mdi-stop</v-icon>
     </v-btn>

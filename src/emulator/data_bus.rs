@@ -1,7 +1,5 @@
 use super::bits::*;
-use crate::*;
 
-#[wasm_bindgen]
 #[derive(Copy, Clone)]
 pub struct SFRBank {
     pub indirect: u8,
@@ -22,7 +20,6 @@ pub struct SFRBank {
     pub eecon2: u8,
 }
 
-#[wasm_bindgen]
 impl SFRBank {
     pub fn new() -> Self {
         Self {

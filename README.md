@@ -10,24 +10,14 @@ This is my personal implementation of an emulator for the PIC16F8X architecture.
 - [PIC16F8X Handbook](https://moodle.dhbw.de/pluginfile.php/101988/mod_resource/content/2/Themenblatt_PIC_programmieren.pdf)
 
 ### User Interface:
-![Screenshot](screenshots/screenshot.png)
-- Vue.js [WebAssembly](https://webassembly.org/)
+- Web Browser (Virtual DOM)
+- [WebAssembly](https://webassembly.org/)
 
 ## Dependencies
 - Rust Compiler (https://www.rust-lang.org/tools/install)
-- wasm-pack (`cargo install wasm-pack`)
-- npm (https://nodejs.org/en/) 
+- cargo-web (`cargo install cargo-web`) 
 
 ## Build & Run
-### Build emulator engine
 ```
-$ cd emulator_backend
-$ wasm-pack build
-```
-
-### Run frontend
-```
-$ cd emulator_frontend
-$ npm install
-$ npm run serve
+$ cargo web start --target wasm32-unknown-unknown
 ```

@@ -7,6 +7,7 @@ pub struct CPU {
     pub cycles: usize,
     pub data_bus: DataBus,
     pub rom_bus: RomBus,
+    jump_performed: bool,
 }
 
 impl CPU {
@@ -16,6 +17,7 @@ impl CPU {
             cycles: 0,
             data_bus: DataBus::new(),
             rom_bus: RomBus::new(),
+            jump_performed: false,
         }
     }
 
@@ -31,7 +33,7 @@ impl CPU {
         }
 
         // If jump was performed one additional cycle has to be added
-        self.cycles += if self.data_bus.get_pc() != pc {
+        self.cycles += if self.jump_performed {
             2
         } else {
             self.data_bus.inc_pc(1);
@@ -42,6 +44,14 @@ impl CPU {
     }
 
     fn execute(&mut self, instruction: Instruction) {
+        self.jump_performed = false;
         // TODO: Implement instructions
+        match instruction {
+            Instruction::Goto(Address(idx)) => {
+                self.data_bus.set_pc(idx);
+                self.jump_performed = true
+            },
+            _ => {}
+        };
     }
 }

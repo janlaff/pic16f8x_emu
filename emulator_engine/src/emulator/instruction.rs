@@ -8,7 +8,7 @@ pub struct FileRegister(u8);
 pub struct BitIndex(usize);
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
-pub struct Address(u16);
+pub struct Address(pub u16);
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct Literal(u8);

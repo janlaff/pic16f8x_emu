@@ -34,7 +34,7 @@ impl CPU {
         self.cycles += if self.data_bus.get_pc() != pc {
             2
         } else {
-            self.data_bus.inc_pc(2);
+            self.data_bus.inc_pc(1);
             1
         };
 

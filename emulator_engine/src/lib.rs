@@ -58,11 +58,11 @@ impl EmulatorEngine {
     }
 
     pub fn reset(&mut self) -> usize {
-        let (start_addr, _) = self.cpu.rom_bus.get_rom_boundary();
-        self.cpu.data_bus.set_pc(start_addr);
+        let (start_idx, _) = self.cpu.rom_bus.get_rom_boundary();
+        self.cpu.data_bus.set_pc(start_idx);
 
         if let Some(parser) = &self.parser {
-            if let Some(idx) = parser.address_info.get(&start_addr) {
+            if let Some(idx) = parser.address_info.get(&start_idx) {
                 *idx
             } else {
                 0
@@ -150,8 +150,8 @@ fn disassemble_lst_file() {
     let file = include_str!("../SimTest01.LST");
     let mut parser = LstParser::from_lst_file(String::from(file));
 
-    for (address, index) in parser.address_info {
-        println!("{:04x} -> {} = ('{}' - '{}')", address, index, parser.content[index].0, parser.content[index].1);
+    for (index, line_index) in parser.address_info {
+        println!("{:04x} -> {} = ('{}' - '{}')", index, line_index, parser.content[line_index].0, parser.content[line_index].1);
     }
 
     for (label, command) in parser.content {

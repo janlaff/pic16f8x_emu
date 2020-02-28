@@ -32,12 +32,12 @@ impl LstParser {
         for line in data.lines() {
             let mut found = false;
             for cap in command_rgx.captures(line) {
-                let address = u16::from_str_radix(&cap[1], 16).unwrap();
+                let index = u16::from_str_radix(&cap[1], 16).unwrap();
                 let opcode = u16::from_str_radix(&cap[2], 16).unwrap();
                 let label = String::from(&cap[3]);
                 let info = String::from(&cap[4]);
 
-                address_info.insert(address * 2, content.len());
+                address_info.insert(index, content.len());
                 content.push((label, info));
                 bytecode.push(get_high_byte(opcode));
                 bytecode.push(get_low_byte(opcode));

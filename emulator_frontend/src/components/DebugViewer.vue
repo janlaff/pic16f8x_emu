@@ -17,7 +17,6 @@
         </template>
       </v-list>
     </div>
-    <!--<v-list-item v-for="line in lines" :key="line.index">{{line}}</v-list-item>-->
   </v-card>
 </template>
 

@@ -36,8 +36,8 @@ impl LstParser {
                 let label = String::from(&cap[3]);
                 let info = String::from(&cap[4]);
 
+                address_info.insert(address, content.len());
                 content.push((label, info));
-                address_info.insert(address, content.len() - 1);
                 bytecode.push(get_high_byte(opcode));
                 bytecode.push(get_low_byte(opcode));
 

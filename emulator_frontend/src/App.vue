@@ -11,7 +11,7 @@
 import DebugViewer from "./components/DebugViewer";
 import SFRViewer from "./components/SFRViewer";
 import { engine, readEngineMem } from "./emulator";
-import { SFRBank } from "emulator_engine";
+import { SFRBank } from "emulator_backend";
 import Controls from "./components/Controls";
 
 export default {

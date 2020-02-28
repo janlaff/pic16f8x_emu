@@ -21,13 +21,13 @@ This is my personal implementation of an emulator for the PIC16F8X architecture.
 ## Build & Run
 ### Build emulator engine
 ```
-$ cd emulator_engine
+$ cd emulator_backend
 $ wasm-pack build
 ```
 
 ### Run frontend
 ```
-$ cd vue-frontend
+$ cd emulator_frontend
 $ npm install
 $ npm run serve
 ```

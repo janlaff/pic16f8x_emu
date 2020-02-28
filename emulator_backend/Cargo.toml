@@ -1,5 +1,5 @@
 [package]
-name = "emulator_engine"
+name = "emulator_backend"
 version = "0.1.0"
 authors = ["Jan Lafferton <jla@jcbachmann.de>"]
 edition = "2018"

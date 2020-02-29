@@ -4,11 +4,11 @@ use yew::prelude::*;
 use yew::services::ConsoleService;
 
 use super::ControlMsg;
-use crate::emulator;
+use crate::emulator::CPU;
 
 pub struct CPUAgent {
     link: AgentLink<Self>,
-    cpu: emulator::CPU,
+    cpu: CPU,
     console: ConsoleService,
 }
 
@@ -31,7 +31,7 @@ impl Agent for CPUAgent {
     fn create(link: AgentLink<Self>) -> Self {
         Self {
             link,
-            cpu: emulator::CPU::new(),
+            cpu: CPU::new(),
             console: ConsoleService::new(),
         }
     }

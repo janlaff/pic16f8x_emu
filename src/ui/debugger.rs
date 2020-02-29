@@ -20,7 +20,9 @@ impl Component for Debugger {
 
     fn view(&self) -> Html {
         html! {
-            <Controls />
+            <div>
+                <Controls />
+            </div>
         }
     }
 }

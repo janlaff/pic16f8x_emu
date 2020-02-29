@@ -15,9 +15,10 @@ This is my personal implementation of an emulator for the PIC16F8X architecture.
 
 ## Dependencies
 - Rust Compiler (https://www.rust-lang.org/tools/install)
+- Rust nightly toolchain (`rustup install nightly`)
 - cargo-web (`cargo install cargo-web`) 
 
 ## Build & Run
 ```
-$ cargo web start --target wasm32-unknown-unknown
+$ cargo +nightly web start --target wasm32-unknown-unknown
 ```

@@ -11,6 +11,7 @@ pub struct CPUAgent {
     link: AgentLink<Self>,
     cpu: CPU,
     console: ConsoleService,
+    handlers: Vec<HandlerId>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -36,7 +37,16 @@ impl Agent for CPUAgent {
             link,
             cpu: CPU::new(),
             console: ConsoleService::new(),
+            handlers: Vec::new(),
         }
+    }
+
+    fn connected(&mut self, id: HandlerId) {
+        self.handlers.push(id);
+    }
+
+    fn disconnected(&mut self, id: HandlerId) {
+        self.handlers.remove_item(&id);
     }
 
     fn update(&mut self, _: Self::Message) {}
@@ -55,9 +65,12 @@ impl Agent for CPUAgent {
                 }
             },
             Request::Memory(memory_msg) => match memory_msg {
-                MemoryMsg::FetchMemory => self
-                    .link
-                    .respond(who, Response::FetchedMemory(vec![0, 1, 2, 3])),
+                MemoryMsg::FetchMemory => {
+                    for id in &self.handlers {
+                        self.link
+                            .respond(*id, Response::FetchedMemory(vec![1, 2, 3, 4]));
+                    }
+                }
                 _ => {}
             },
         }

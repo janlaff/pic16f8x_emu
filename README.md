@@ -2,16 +2,16 @@
 This is my personal implementation of an emulator for the PIC16F8X architecture.
 
 ## Features:
-- Working cpu emulation
-- Working user interface (GUI)
+- Written in pure rust
+- Multithreaded native client side web application
+
+## Used technologies
+- [WebAssembly](https://webassembly.org/)
+- [yew](https://yew.rs/)
 
 ### CPU Emulation:
 - [PIC16F8X Datasheet](https://moodle.dhbw.de/pluginfile.php/95874/mod_resource/content/2/PIC16F8x.pdf)
 - [PIC16F8X Handbook](https://moodle.dhbw.de/pluginfile.php/101988/mod_resource/content/2/Themenblatt_PIC_programmieren.pdf)
-
-### User Interface:
-- Web Browser (Virtual DOM)
-- [WebAssembly](https://webassembly.org/)
 
 ## Dependencies
 - Rust Compiler (https://www.rust-lang.org/tools/install)

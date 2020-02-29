@@ -1,5 +1,7 @@
 use yew::prelude::*;
 
+use std::slice::Chunks;
+
 use super::CPUAgent;
 use super::Request;
 use super::Response;
@@ -45,16 +47,26 @@ impl Component for MemoryViewer {
     }
 
     fn view(&self) -> Html {
-        let render_cell = |cell| {
+        let render_cell = |cell: &u8| {
             html! {
-                <li>{ cell }</li>
+                <td>{ hex::encode([*cell]) }</td>
+            }
+        };
+
+        let render_chunk = |chunk: &[u8]| {
+            html! {
+                <tr>
+                    { for chunk.iter().map(render_cell) }
+                </tr>
             }
         };
 
         html! {
-            <ul>
-                { for self.memory.iter().map(render_cell) }
-            </ul>
+            <table>
+                <tbody>
+                    { for self.memory.chunks(4).map(render_chunk) }
+                </tbody>
+            </table>
         }
     }
 }

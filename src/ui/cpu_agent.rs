@@ -67,8 +67,10 @@ impl Agent for CPUAgent {
             Request::Memory(memory_msg) => match memory_msg {
                 MemoryMsg::FetchMemory => {
                     for id in &self.handlers {
-                        self.link
-                            .respond(*id, Response::FetchedMemory(vec![1, 2, 3, 4]));
+                        self.link.respond(
+                            *id,
+                            Response::FetchedMemory(self.cpu.data_bus.memory.to_vec()),
+                        );
                     }
                 }
                 _ => {}

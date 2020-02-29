@@ -50,7 +50,7 @@ impl CPU {
             Instruction::Goto(Address(idx)) => {
                 self.data_bus.set_pc(idx);
                 self.jump_performed = true
-            },
+            }
             _ => {}
         };
     }

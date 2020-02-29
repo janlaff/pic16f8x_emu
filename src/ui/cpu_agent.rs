@@ -5,7 +5,7 @@ use yew::services::ConsoleService;
 
 use super::ControlMsg;
 use super::MemoryMsg;
-use crate::emulator::CPU;
+use crate::emulator::{parse_lst_file, CPU};
 
 pub struct CPUAgent {
     link: AgentLink<Self>,
@@ -24,6 +24,7 @@ pub enum Request {
 pub enum Response {
     Empty,
     FetchedMemory(Vec<u8>),
+    UpdatedMemory(usize, u8),
 }
 
 impl Agent for CPUAgent {
@@ -33,9 +34,14 @@ impl Agent for CPUAgent {
     type Output = Response;
 
     fn create(link: AgentLink<Self>) -> Self {
+        let mut cpu = CPU::new();
+
+        let result = parse_lst_file(include_str!("../../SimTest01.LST"));
+        cpu.rom_bus.load_program(result.bytecode.as_slice(), 0);
+
         Self {
             link,
-            cpu: CPU::new(),
+            cpu,
             console: ConsoleService::new(),
             handlers: Vec::new(),
         }
@@ -58,7 +64,9 @@ impl Agent for CPUAgent {
                     self.console.log("Tried to run program");
                 }
                 ControlMsg::Step => {
-                    self.console.log("Tried to step program");
+                    self.console.log("Running experimental step");
+                    // TODO: pass component link to raise individual memory updates
+                    self.cpu.step().unwrap();
                 }
                 ControlMsg::Stop => {
                     self.console.log("Tried to stop program");

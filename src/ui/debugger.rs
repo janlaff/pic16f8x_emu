@@ -1,6 +1,7 @@
 use yew::prelude::*;
 
 use super::Controls;
+use super::MemoryViewer;
 
 pub struct Debugger {
     link: ComponentLink<Self>,
@@ -22,6 +23,7 @@ impl Component for Debugger {
         html! {
             <div>
                 <Controls />
+                <MemoryViewer />
             </div>
         }
     }

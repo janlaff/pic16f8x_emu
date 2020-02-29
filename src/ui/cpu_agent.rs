@@ -4,6 +4,7 @@ use yew::prelude::*;
 use yew::services::ConsoleService;
 
 use super::ControlMsg;
+use super::MemoryMsg;
 use crate::emulator::CPU;
 
 pub struct CPUAgent {
@@ -15,11 +16,13 @@ pub struct CPUAgent {
 #[derive(Serialize, Deserialize, Debug)]
 pub enum Request {
     Control(ControlMsg),
+    Memory(MemoryMsg),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum Response {
     Empty,
+    FetchedMemory(Vec<u8>),
 }
 
 impl Agent for CPUAgent {
@@ -50,6 +53,12 @@ impl Agent for CPUAgent {
                 ControlMsg::Stop => {
                     self.console.log("Tried to stop program");
                 }
+            },
+            Request::Memory(memory_msg) => match memory_msg {
+                MemoryMsg::FetchMemory => self
+                    .link
+                    .respond(who, Response::FetchedMemory(vec![0, 1, 2, 3])),
+                _ => {}
             },
         }
 

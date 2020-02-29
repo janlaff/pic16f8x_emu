@@ -8,7 +8,6 @@ use crate::emulator;
 
 pub struct App {
     link: ComponentLink<Self>,
-    cpu: Rc<RefCell<emulator::CPU>>,
 }
 
 impl Component for App {
@@ -16,10 +15,7 @@ impl Component for App {
     type Properties = ();
 
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        Self {
-            link,
-            cpu: Rc::new(RefCell::new(emulator::CPU::new())),
-        }
+        Self { link }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {

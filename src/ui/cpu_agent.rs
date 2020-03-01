@@ -5,13 +5,14 @@ use yew::services::ConsoleService;
 
 use super::ControlMsg;
 use super::MemoryMsg;
-use crate::emulator::{parse_lst_file, CPU};
+use crate::emulator::{parse_lst_file, ParseResult, CPU};
 
 pub struct CPUAgent {
     link: AgentLink<Self>,
     cpu: CPU,
     console: ConsoleService,
     handlers: Vec<HandlerId>,
+    program: Option<ParseResult>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -44,6 +45,7 @@ impl Agent for CPUAgent {
             cpu,
             console: ConsoleService::new(),
             handlers: Vec::new(),
+            program: Some(result),
         }
     }
 
@@ -84,7 +86,5 @@ impl Agent for CPUAgent {
                 _ => {}
             },
         }
-
-        self.link.respond(who, Response::Empty)
     }
 }

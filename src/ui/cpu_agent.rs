@@ -25,7 +25,7 @@ pub enum Request {
 pub enum Response {
     Empty,
     FetchedMemory(Vec<u8>),
-    UpdatedMemory(usize, u8),
+    UpdatedMemory(u8, u8),
 }
 
 impl Agent for CPUAgent {
@@ -81,6 +81,14 @@ impl Agent for CPUAgent {
                             *id,
                             Response::FetchedMemory(self.cpu.data_bus.memory.to_vec()),
                         );
+                    }
+                }
+                MemoryMsg::UpdateMemory(address, value) => {
+                    self.cpu.data_bus.write_byte(address, value);
+
+                    for id in &self.handlers {
+                        self.link
+                            .respond(*id, Response::UpdatedMemory(address, value));
                     }
                 }
                 _ => {}

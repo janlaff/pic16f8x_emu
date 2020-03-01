@@ -16,6 +16,7 @@ pub struct MemoryViewer {
 pub enum MemoryMsg {
     ContextMsg(Response),
     FetchMemory,
+    UpdateMemory(u8, u8),
 }
 
 impl Component for MemoryViewer {
@@ -40,6 +41,10 @@ impl Component for MemoryViewer {
         match msg {
             MemoryMsg::ContextMsg(Response::FetchedMemory(memory)) => {
                 self.memory = memory;
+                true
+            }
+            MemoryMsg::ContextMsg(Response::UpdatedMemory(address, value)) => {
+                self.memory[address as usize] = value;
                 true
             }
             _ => false,

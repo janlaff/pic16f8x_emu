@@ -63,18 +63,21 @@ impl Component for MemoryViewer {
         let render_chunk = |(idx, chunk): (usize, &[u8])| {
             html! {
                 <tr>
-                    <td>{ hex::encode([idx as u8 * 4]) }{ ":" }</td>
+                    <td>{ hex::encode([(idx * chunk.len()) as u8]) }{ ":" }</td>
                     { for chunk.iter().map(render_cell) }
                 </tr>
             }
         };
 
         html! {
-            <table>
-                <tbody>
-                    { for self.memory.chunks(4).enumerate().map(render_chunk) }
-                </tbody>
-            </table>
+            <>
+                <h1>{ "Memory" }</h1>
+                <table>
+                    <tbody>
+                        { for self.memory.chunks(8).enumerate().map(render_chunk) }
+                    </tbody>
+                </table>
+            </>
         }
     }
 }

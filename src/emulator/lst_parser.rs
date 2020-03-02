@@ -1,8 +1,10 @@
 use super::bits::*;
 
+use serde::{Deserialize, Serialize};
 use regex::Regex;
 use std::collections::HashMap;
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ParseResult {
     pub address_info: HashMap<u16, usize>,
     pub content: Vec<(String, String)>,

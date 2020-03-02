@@ -4,14 +4,13 @@ use yew::prelude::*;
 use yew::services::ConsoleService;
 use yew::agent::Dispatched;
 
-use crate::emulator::{parse_lst_file, ParseResult, SfrBank, CPU};
+use crate::emulator::{parse_lst_file, ParseResult, SfrBank, CPU, parse_bin_file};
 
 pub struct CPUAgent {
     link: AgentLink<Self>,
     cpu: CPU,
     console: ConsoleService,
     handlers: Vec<HandlerId>,
-    program: Option<ParseResult>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -19,6 +18,8 @@ pub enum Request {
     FetchSfrs,
     FetchMemory,
     UpdateMemory(u8, u8),
+    LoadLstFile(String),
+    LoadBinFile(Vec<u8>),
     Run,
     Step,
     Stop,
@@ -30,6 +31,7 @@ pub enum Response {
     FetchedMemory(Vec<u8>),
     FetchedSfrs(SfrBank),
     UpdatedMemory(u8, u8),
+    LoadedProgram(ParseResult),
 }
 
 impl Agent for CPUAgent {
@@ -39,17 +41,11 @@ impl Agent for CPUAgent {
     type Output = Response;
 
     fn create(link: AgentLink<Self>) -> Self {
-        let mut cpu = CPU::new();
-
-        let result = parse_lst_file(include_str!("../../SimTest01.LST"));
-        cpu.rom_bus.load_program(result.bytecode.as_slice(), 0);
-
         Self {
             link,
-            cpu,
+            cpu: CPU::new(),
             console: ConsoleService::new(),
             handlers: Vec::new(),
-            program: Some(result),
         }
     }
 
@@ -101,6 +97,26 @@ impl Agent for CPUAgent {
                 for id in &self.handlers {
                     self.link
                         .respond(*id, Response::FetchedSfrs(self.cpu.data_bus.sfr_bank));
+                }
+            }
+            Request::LoadBinFile(binary) => {
+                let result = parse_bin_file(binary.as_slice());
+                self.cpu.rom_bus.load_program(result.bytecode.as_slice(), 0);
+
+                for id in &self.handlers {
+                    self.link.respond(*id, Response::LoadedProgram(result.clone()));
+                    self.link.respond(*id, Response::FetchedMemory(self.cpu.data_bus.memory.to_vec()));
+                    self.link.respond(*id, Response::FetchedSfrs(self.cpu.data_bus.sfr_bank));
+                }
+            }
+            Request::LoadLstFile(contents) => {
+                let result = parse_lst_file(contents.as_str());
+                self.cpu.rom_bus.load_program(result.bytecode.as_slice(), 0);
+
+                for id in &self.handlers {
+                    self.link.respond(*id, Response::LoadedProgram(result.clone()));
+                    self.link.respond(*id, Response::FetchedMemory(self.cpu.data_bus.memory.to_vec()));
+                    self.link.respond(*id, Response::FetchedSfrs(self.cpu.data_bus.sfr_bank));
                 }
             }
         }

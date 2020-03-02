@@ -34,6 +34,7 @@ impl Component for Controls {
     }
 
     fn view(&self) -> Html {
+        let load_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::LoadLstFile(String::from(include_str!("../../SimTest01.LST")))));
         let run_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::Run));
         let step_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::Step));
         let stop_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::Stop));
@@ -41,6 +42,7 @@ impl Component for Controls {
         html! {
             <div>
                 <h1>{ "Controls" }</h1>
+                <button onclick=load_cb>{ "Load demo rom" }</button>
                 <button onclick=run_cb>{ "Run" }</button>
                 <button onclick=step_cb>{ "Step" }</button>
                 <button onclick=stop_cb>{ "Stop" }</button>

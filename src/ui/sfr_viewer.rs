@@ -2,11 +2,8 @@ use yew::prelude::*;
 
 use std::slice::Chunks;
 
-use crate::emulator::SfrBank;
-use super::CPUAgent;
-use super::MemoryMsg;
-use super::Request;
-use super::Response;
+use crate::emulator::{SfrBank, get_bit};
+use super::{CPUAgent, Response, Request};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum SfrMsg {

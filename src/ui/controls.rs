@@ -42,10 +42,10 @@ impl Component for Controls {
         html! {
             <div id="controls">
                 <h1>{ "Controls" }</h1>
-                <button onclick=load_cb>{ "Load demo rom" }</button>
-                <button onclick=run_cb>{ "Run" }</button>
-                <button onclick=step_cb>{ "Step" }</button>
-                <button onclick=stop_cb>{ "Stop" }</button>
+                <button onclick=load_cb class="custom-btn">{ "Load demo rom" }</button>
+                <button onclick=run_cb class="custom-btn">{ "Run" }</button>
+                <button onclick=step_cb class="custom-btn">{ "Step" }</button>
+                <button onclick=stop_cb class="custom-btn">{ "Stop" }</button>
             </div>
         }
     }

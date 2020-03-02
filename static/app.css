@@ -36,6 +36,14 @@ body {
   padding: 10px;
 }
 
+.custom-btn {
+  border: None;
+  outline: None;
+  background-color: white;
+  margin-right: 5px;
+  padding: 5px;
+}
+
 .active {
   background-color: white;
   color: black;

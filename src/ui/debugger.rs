@@ -24,7 +24,7 @@ impl Component for Debugger {
     fn view(&self) -> Html {
         html! {
             <div>
-                <div style="display: flex; flex-direction: row">
+                <div id="dashboard">
                     <div>
                         <MemoryViewer />
                         <SfrViewer />

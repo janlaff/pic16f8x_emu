@@ -1,3 +1,4 @@
-* {
-  margin: 0;
+#dashboard {
+  display: flex;
+  flex-direction: row;
 }

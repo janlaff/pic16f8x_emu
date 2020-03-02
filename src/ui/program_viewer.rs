@@ -39,14 +39,33 @@ impl Component for ProgramViewer {
                 self.program = Some(program);
                 true
             }
+            ProgramMsg::ContextMsg(Response::UpdatedMemory(PCL_ADDR, value)) => {
+                // TODO: highlight current line
+                false
+            }
             _ => false,
         }
     }
 
     fn view(&self) -> Html {
+        let render_line = |(label, content): &(String, String)| -> Html {
+            html! {
+                <tr>
+                    <td>{ label }</td>
+                    <td>{ content }</td>
+                </tr>
+            }
+        };
+
         let render_program = || -> Html {
             if let Some(prog) = &self.program {
-                html! { <h3>{ "Program loaded" }</h3> }
+                html! {
+                    <table>
+                        <tbody>
+                            { for prog.content.iter().map(render_line) }
+                        </tbody>
+                    </table>
+                }
             } else {
                 html! { <h3>{ "No program loaded" }</h3> }
             }
@@ -55,11 +74,7 @@ impl Component for ProgramViewer {
         html! {
             <div>
                 <h1>{ "Program" }</h1>
-                <table>
-                    <tbody>
-                        { render_program() }
-                    </tbody>
-                </table>
+                { render_program() }
             </div>
         }
     }

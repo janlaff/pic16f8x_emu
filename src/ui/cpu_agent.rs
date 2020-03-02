@@ -92,8 +92,6 @@ impl Agent for CPUAgent {
                 }
             }
             Request::UpdateMemory(address, value) => {
-                self.cpu.data_bus.write_byte(address, value);
-
                 for id in &self.handlers {
                     self.link
                         .respond(*id, Response::UpdatedMemory(address, value));

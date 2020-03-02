@@ -3,6 +3,7 @@ use yew::prelude::*;
 use super::Controls;
 use super::MemoryViewer;
 use super::SfrViewer;
+use super::ProgramViewer;
 
 pub struct Debugger {
     link: ComponentLink<Self>,
@@ -23,9 +24,16 @@ impl Component for Debugger {
     fn view(&self) -> Html {
         html! {
             <div>
-                <Controls />
-                <MemoryViewer />
-                <SfrViewer />
+                <div style="display: flex; flex-direction: row">
+                    <div>
+                        <MemoryViewer />
+                        <SfrViewer />
+                    </div>
+                    <div>
+                        <Controls />
+                        <ProgramViewer />
+                    </div>
+                </div>
             </div>
         }
     }

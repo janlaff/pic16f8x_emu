@@ -15,8 +15,6 @@ pub struct MemoryViewer {
 #[derive(Debug, Serialize, Deserialize)]
 pub enum MemoryMsg {
     ContextMsg(Response),
-    FetchMemory,
-    UpdateMemory(u8, u8),
 }
 
 impl Component for MemoryViewer {

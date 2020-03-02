@@ -5,7 +5,8 @@ use yew::services::ConsoleService;
 
 use super::ControlMsg;
 use super::MemoryMsg;
-use crate::emulator::{parse_lst_file, ParseResult, CPU};
+use super::SfrMsg;
+use crate::emulator::{parse_lst_file, ParseResult, SfrBank, CPU};
 
 pub struct CPUAgent {
     link: AgentLink<Self>,
@@ -19,12 +20,14 @@ pub struct CPUAgent {
 pub enum Request {
     Control(ControlMsg),
     Memory(MemoryMsg),
+    Sfr(SfrMsg),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum Response {
     Empty,
     FetchedMemory(Vec<u8>),
+    FetchedSfrs(SfrBank),
     UpdatedMemory(u8, u8),
 }
 
@@ -89,6 +92,15 @@ impl Agent for CPUAgent {
                     for id in &self.handlers {
                         self.link
                             .respond(*id, Response::UpdatedMemory(address, value));
+                    }
+                }
+                _ => {}
+            },
+            Request::Sfr(sfr_msg) => match sfr_msg {
+                SfrMsg::FetchSfrs => {
+                    for id in &self.handlers {
+                        self.link
+                            .respond(*id, Response::FetchedSfrs(self.cpu.data_bus.sfr_bank));
                     }
                 }
                 _ => {}

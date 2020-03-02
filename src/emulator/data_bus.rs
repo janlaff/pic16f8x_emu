@@ -1,7 +1,10 @@
 use super::bits::*;
 
-#[derive(Copy, Clone)]
-pub struct SFRBank {
+use serde::{Deserialize, Serialize};
+
+#[derive(Copy, Clone, Debug, Serialize, Deserialize)]
+pub struct SfrBank {
+    pub w: u8,
     pub indirect: u8,
     pub pcl: u8,
     pub status: u8,
@@ -20,9 +23,10 @@ pub struct SFRBank {
     pub eecon2: u8,
 }
 
-impl SFRBank {
+impl SfrBank {
     pub fn new() -> Self {
         Self {
+            w: 0,
             indirect: 0,
             pcl: 0,
             status: 0,
@@ -45,14 +49,14 @@ impl SFRBank {
 
 pub struct DataBus {
     pub memory: [u8; 0x80],
-    pub sfr_bank: SFRBank,
+    pub sfr_bank: SfrBank,
 }
 
 impl DataBus {
     pub fn new() -> Self {
         Self {
             memory: [0; 0x80],
-            sfr_bank: SFRBank::new(),
+            sfr_bank: SfrBank::new(),
         }
     }
 

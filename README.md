@@ -1,10 +1,10 @@
 # pic16f8x_emu
 This is my personal implementation of an emulator for the PIC16F8X architecture.
+### [Link to live version (GitHub Pages)](https://proman0973.github.io/pic16f8x_emu/live/index.html)
 
 ![alt text](images/screenshot.png)
 
 You can try the live version right now in your browser
-[Link to live version](https://proman0973.github.io/pic16f8x_emu/live/index.html)
 
 ## Features:
 - Written in pure rust

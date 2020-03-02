@@ -1,6 +1,8 @@
 # pic16f8x_emu
 This is my personal implementation of an emulator for the PIC16F8X architecture.
 
+![alt text](images/screenshot.png)
+
 ## Features:
 - Written in pure rust
 - Multithreaded native frontend web application

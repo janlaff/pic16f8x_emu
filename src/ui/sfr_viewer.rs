@@ -11,7 +11,6 @@ use super::Response;
 #[derive(Serialize, Deserialize, Debug)]
 pub enum SfrMsg {
     ContextMsg(Response),
-    FetchSfrs,
 }
 
 pub struct SfrViewer {
@@ -34,7 +33,7 @@ impl Component for SfrViewer {
     }
 
     fn mounted(&mut self) -> ShouldRender {
-        self.context.send(Request::Sfr(SfrMsg::FetchSfrs));
+        self.context.send(Request::FetchSfrs);
         false
     }
 
@@ -42,7 +41,7 @@ impl Component for SfrViewer {
         match msg {
             SfrMsg::ContextMsg(Response::UpdatedMemory(address, value)) => {
                 if address < 0x0c {
-                    self.context.send(Request::Sfr(SfrMsg::FetchSfrs));
+                    self.context.send(Request::FetchSfrs);
                 }
                 true
             }

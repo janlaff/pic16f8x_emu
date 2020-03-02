@@ -41,7 +41,7 @@ impl CPU {
             1
         };
 
-        dispatcher.send(Request::Sfr(SfrMsg::FetchSfrs));
+        dispatcher.send(Request::FetchSfrs);
 
         Ok(())
     }

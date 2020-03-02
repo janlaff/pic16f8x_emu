@@ -33,7 +33,7 @@ impl Component for MemoryViewer {
     }
 
     fn mounted(&mut self) -> ShouldRender {
-        self.context.send(Request::Memory(MemoryMsg::FetchMemory));
+        self.context.send(Request::FetchMemory);
         false
     }
 

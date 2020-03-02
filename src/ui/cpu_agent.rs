@@ -19,9 +19,12 @@ pub struct CPUAgent {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum Request {
-    Control(ControlMsg),
-    Memory(MemoryMsg),
-    Sfr(SfrMsg),
+    FetchSfrs,
+    FetchMemory,
+    UpdateMemory(u8, u8),
+    Run,
+    Step,
+    Stop,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -65,52 +68,44 @@ impl Agent for CPUAgent {
 
     fn handle_input(&mut self, msg: Self::Input, who: HandlerId) {
         match msg {
-            Request::Control(control_msg) => match control_msg {
-                ControlMsg::Run => {
-                    self.console.log("Tried to run program");
-                }
-                ControlMsg::Step => {
-                    self.console.log("Running experimental step");
-                    // TODO: pass component link to raise individual memory updates
-                    self.cpu.step(Self::dispatcher()).unwrap();
-                }
-                ControlMsg::Stop => {
-                    self.console.log("Tried to stop program");
-                    self.cpu.data_bus.set_pc(self.cpu.rom_bus.get_rom_boundary().0);
+            Request::Run => {
+                self.console.log("Tried to run program");
+            }
+            Request::Step => {
+                self.console.log("Running experimental step");
+                // TODO: pass component link to raise individual memory updates
+                self.cpu.step(Self::dispatcher()).unwrap();
+            }
+            Request::Stop => {
+                self.console.log("Tried to stop program");
+                self.cpu.data_bus.set_pc(self.cpu.rom_bus.get_rom_boundary().0);
 
-                    for id in &self.handlers {
-                        self.link.respond(*id, Response::FetchedSfrs(self.cpu.data_bus.sfr_bank));
-                    }
+                for id in &self.handlers {
+                    self.link.respond(*id, Response::FetchedSfrs(self.cpu.data_bus.sfr_bank));
                 }
-            },
-            Request::Memory(memory_msg) => match memory_msg {
-                MemoryMsg::FetchMemory => {
-                    for id in &self.handlers {
-                        self.link.respond(
-                            *id,
-                            Response::FetchedMemory(self.cpu.data_bus.memory.to_vec()),
-                        );
-                    }
+            }
+            Request::FetchMemory => {
+                for id in &self.handlers {
+                    self.link.respond(
+                        *id,
+                        Response::FetchedMemory(self.cpu.data_bus.memory.to_vec()),
+                    );
                 }
-                MemoryMsg::UpdateMemory(address, value) => {
-                    self.cpu.data_bus.write_byte(address, value);
+            }
+            Request::UpdateMemory(address, value) => {
+                self.cpu.data_bus.write_byte(address, value);
 
-                    for id in &self.handlers {
-                        self.link
-                            .respond(*id, Response::UpdatedMemory(address, value));
-                    }
+                for id in &self.handlers {
+                    self.link
+                        .respond(*id, Response::UpdatedMemory(address, value));
                 }
-                _ => {}
-            },
-            Request::Sfr(sfr_msg) => match sfr_msg {
-                SfrMsg::FetchSfrs => {
-                    for id in &self.handlers {
-                        self.link
-                            .respond(*id, Response::FetchedSfrs(self.cpu.data_bus.sfr_bank));
-                    }
+            }
+            Request::FetchSfrs => {
+                for id in &self.handlers {
+                    self.link
+                        .respond(*id, Response::FetchedSfrs(self.cpu.data_bus.sfr_bank));
                 }
-                _ => {}
-            },
+            }
         }
     }
 }

@@ -11,9 +11,7 @@ pub struct Controls {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ControlMsg {
-    Run,
-    Step,
-    Stop,
+    ContextMsg(Request),
 }
 
 impl Component for Controls {
@@ -29,16 +27,16 @@ impl Component for Controls {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            _ => self.dispatcher.send(Request::Control(msg)),
+            ControlMsg::ContextMsg(request) => self.dispatcher.send(request),
         }
 
         false
     }
 
     fn view(&self) -> Html {
-        let run_cb = self.link.callback(|_| ControlMsg::Run);
-        let step_cb = self.link.callback(|_| ControlMsg::Step);
-        let stop_cb = self.link.callback(|_| ControlMsg::Stop);
+        let run_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::Run));
+        let step_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::Step));
+        let stop_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::Stop));
 
         html! {
             <>

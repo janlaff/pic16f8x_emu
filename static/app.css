@@ -2,3 +2,7 @@
   display: flex;
   flex-direction: row;
 }
+
+table, td, thead {
+  border: 1px solid black;
+}

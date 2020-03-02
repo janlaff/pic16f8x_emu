@@ -85,7 +85,7 @@ impl Component for SfrViewer {
 
         html! {
             <div>
-                <h1>{ "Special Function Registers" }</h1>
+                <h1>{ "SFR" }</h1>
                 <table>
                     <tbody>
                         { for sfr_data.iter().map(render_sfr) }

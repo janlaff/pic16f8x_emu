@@ -39,12 +39,12 @@ impl Component for Controls {
         let stop_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::Stop));
 
         html! {
-            <>
+            <div>
                 <h1>{ "Controls" }</h1>
                 <button onclick=run_cb>{ "Run" }</button>
                 <button onclick=step_cb>{ "Step" }</button>
                 <button onclick=stop_cb>{ "Stop" }</button>
-            </>
+            </div>
         }
     }
 }

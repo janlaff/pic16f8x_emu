@@ -2,6 +2,23 @@ use super::bits::*;
 
 use serde::{Deserialize, Serialize};
 
+pub const INDIRECT_ADDR: u8 = 0x00;
+pub const OPTION_ADDR: u8 = 0x01;
+pub const TMR0_ADDR: u8 = 0x01;
+pub const PCL_ADDR: u8 = 0x02;
+pub const STATUS_ADDR: u8 = 0x03;
+pub const FSR_ADDR: u8 = 0x04;
+pub const TRISA_ADDR: u8 = 0x05;
+pub const PORTA_ADDR: u8 = 0x05;
+pub const TRISB_ADDR: u8 = 0x06;
+pub const PORTB_ADDR: u8 = 0x07;
+pub const EECON1_ADDR: u8 = 0x08;
+pub const EEDATA_ADDR: u8 = 0x08;
+pub const EECON2_ADDR: u8 = 0x09;
+pub const EEADR_ADDR: u8 = 0x09;
+pub const PCLATH_ADDR: u8 = 0x0a;
+pub const INTCON_ADDR: u8 = 0x0b;
+
 #[derive(Copy, Clone, Debug, Serialize, Deserialize)]
 pub struct SfrBank {
     pub w: u8,
@@ -112,33 +129,33 @@ impl DataBus {
         if get_bit(self.sfr_bank.status, RP0) {
             // Bank 1 is used
             match address {
-                0x00 => &mut self.sfr_bank.indirect,
-                0x01 => &mut self.sfr_bank.option,
-                0x02 => &mut self.sfr_bank.pcl,
-                0x03 => &mut self.sfr_bank.status,
-                0x04 => &mut self.sfr_bank.fsr,
-                0x05 => &mut self.sfr_bank.trisa,
-                0x06 => &mut self.sfr_bank.trisb,
-                0x08 => &mut self.sfr_bank.eecon1,
-                0x09 => &mut self.sfr_bank.eecon2,
-                0x0a => &mut self.sfr_bank.pclath,
-                0x0b => &mut self.sfr_bank.intcon,
+                INDIRECT_ADDR => &mut self.sfr_bank.indirect,
+                OPTION_ADDR => &mut self.sfr_bank.option,
+                PCL_ADDR => &mut self.sfr_bank.pcl,
+                STATUS_ADDR => &mut self.sfr_bank.status,
+                FSR_ADDR => &mut self.sfr_bank.fsr,
+                TRISA_ADDR => &mut self.sfr_bank.trisa,
+                TRISB_ADDR => &mut self.sfr_bank.trisb,
+                EECON1_ADDR => &mut self.sfr_bank.eecon1,
+                EECON2_ADDR => &mut self.sfr_bank.eecon2,
+                PCLATH_ADDR => &mut self.sfr_bank.pclath,
+                INTCON_ADDR => &mut self.sfr_bank.intcon,
                 _ => &mut self.memory[address as usize],
             }
         } else {
             // Bank 0 is used
             match address {
-                0x00 => &mut self.sfr_bank.indirect,
-                0x01 => &mut self.sfr_bank.tmr0,
-                0x02 => &mut self.sfr_bank.pcl,
-                0x03 => &mut self.sfr_bank.status,
-                0x04 => &mut self.sfr_bank.fsr,
-                0x05 => &mut self.sfr_bank.porta,
-                0x06 => &mut self.sfr_bank.portb,
-                0x08 => &mut self.sfr_bank.eedata,
-                0x09 => &mut self.sfr_bank.eeadr,
-                0x0a => &mut self.sfr_bank.pclath,
-                0x0b => &mut self.sfr_bank.intcon,
+                INDIRECT_ADDR => &mut self.sfr_bank.indirect,
+                TMR0_ADDR => &mut self.sfr_bank.tmr0,
+                PCL_ADDR => &mut self.sfr_bank.pcl,
+                STATUS_ADDR => &mut self.sfr_bank.status,
+                FSR_ADDR => &mut self.sfr_bank.fsr,
+                PORTA_ADDR => &mut self.sfr_bank.porta,
+                PORTB_ADDR => &mut self.sfr_bank.portb,
+                EEDATA_ADDR => &mut self.sfr_bank.eedata,
+                EEADR_ADDR => &mut self.sfr_bank.eeadr,
+                PCLATH_ADDR => &mut self.sfr_bank.pclath,
+                INTCON_ADDR => &mut self.sfr_bank.intcon,
                 _ => &mut self.memory[address as usize],
             }
         }

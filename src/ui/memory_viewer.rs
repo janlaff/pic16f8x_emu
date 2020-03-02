@@ -54,9 +54,7 @@ impl Component for MemoryViewer {
     fn view(&self) -> Html {
         let render_cell = |cell: &u8| {
             html! {
-                <>
-                    <td>{ hex::encode([*cell]) }</td>
-                </>
+                <td>{ hex::encode([*cell]) }</td>
             }
         };
 
@@ -70,14 +68,14 @@ impl Component for MemoryViewer {
         };
 
         html! {
-            <>
+            <div>
                 <h1>{ "Memory" }</h1>
                 <table>
                     <tbody>
                         { for self.memory.chunks(8).enumerate().map(render_chunk) }
                     </tbody>
                 </table>
-            </>
+            </div>
         }
     }
 }

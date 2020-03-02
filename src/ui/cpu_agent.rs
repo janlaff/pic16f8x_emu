@@ -85,10 +85,16 @@ impl Agent for CPUAgent {
                 }
             }
             Request::FetchMemory => {
+                let mut mem = [0u8; 0x80];
+
+                for addr in 0..self.cpu.data_bus.memory.len() {
+                    mem[addr] = self.cpu.data_bus.read_byte(addr as u8);
+                }
+
                 for id in &self.handlers {
                     self.link.respond(
                         *id,
-                        Response::FetchedMemory(self.cpu.data_bus.memory.to_vec()),
+                        Response::FetchedMemory(mem.to_vec()),
                     );
                 }
             }

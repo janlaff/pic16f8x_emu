@@ -28,7 +28,7 @@ impl CPU {
 
         if let Ok(instr) = result {
             debug!("Executing {:?}", instr);
-            self.execute(instr);
+            self.execute(instr, &mut dispatcher);
         } else {
             return Err(result.err().unwrap());
         }
@@ -42,16 +42,17 @@ impl CPU {
         };
 
         dispatcher.send(Request::FetchSfrs);
+        dispatcher.send(Request::UpdateMemory(PCL_ADDR, self.data_bus.sfr_bank.pcl));
 
         Ok(())
     }
 
-    fn execute(&mut self, instruction: Instruction) {
+    fn execute(&mut self, instruction: Instruction, dispatcher: &mut Dispatcher<CPUAgent>) {
         self.jump_performed = false;
         // TODO: Implement instructions
         match instruction {
             Instruction::Goto(Address(idx)) => {
-                self.data_bus.set_pc(idx);
+                self.data_bus.load_pc(idx);
                 self.jump_performed = true
             }
             _ => {}

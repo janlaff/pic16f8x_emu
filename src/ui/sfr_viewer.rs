@@ -84,7 +84,7 @@ impl Component for SfrViewer {
         };
 
         html! {
-            <div>
+            <div id="sfr-viewer">
                 <h1>{ "SFR" }</h1>
                 <table>
                     <tbody>

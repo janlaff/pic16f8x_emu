@@ -40,7 +40,7 @@ impl Component for Controls {
         let stop_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::Stop));
 
         html! {
-            <div>
+            <div id="controls">
                 <h1>{ "Controls" }</h1>
                 <button onclick=load_cb>{ "Load demo rom" }</button>
                 <button onclick=run_cb>{ "Run" }</button>

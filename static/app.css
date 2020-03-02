@@ -10,16 +10,33 @@
   font-size: 12px;
 }
 
+body {
+  background-color: black;
+  color: white;
+}
+
 #dashboard {
   display: flex;
   flex-direction: row;
 }
 
-#program {
-  overflow-y: scroll;
+#memory-viewer {
+  padding: 10px;
+}
+
+#sfr-viewer {
+  padding: 10px;
+}
+
+#program-viewer {
+  padding: 10px;
+}
+
+#controls {
+  padding: 10px;
 }
 
 .active {
-  background-color: black;
-  color: white;
+  background-color: white;
+  color: black;
 }

@@ -66,7 +66,7 @@ impl Component for MemoryViewer {
         };
 
         html! {
-            <div>
+            <div id="memory-viewer">
                 <h1>{ "Memory" }</h1>
                 <table>
                     <tbody>

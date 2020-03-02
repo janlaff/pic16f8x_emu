@@ -24,14 +24,7 @@ You can try the live version right now in your browser
 - cargo-web (`cargo install cargo-web`) 
 
 ## Build & Run
-### Link build output
 ```
-$ cd static
-static: $ ln -s ../target/wasm32-unknown-unknown/debug/pic16f8x_emu.js .
-static: $ ln -s ../target/wasm32-unknown-unknown/debug/pic16f8x_emu.wasm .
-```
-#### Start
-```
-static: $ cd ..
-$ cargo +nightly web start
+$ chmod +x build_and_run.sh
+$ ./build_and_run.sh
 ```

@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use yew::prelude::worker::*;
 use yew::prelude::*;
 use yew::services::ConsoleService;
+use yew::agent::Dispatched;
 
 use super::ControlMsg;
 use super::MemoryMsg;
@@ -71,10 +72,15 @@ impl Agent for CPUAgent {
                 ControlMsg::Step => {
                     self.console.log("Running experimental step");
                     // TODO: pass component link to raise individual memory updates
-                    self.cpu.step().unwrap();
+                    self.cpu.step(Self::dispatcher()).unwrap();
                 }
                 ControlMsg::Stop => {
                     self.console.log("Tried to stop program");
+                    self.cpu.data_bus.set_pc(self.cpu.rom_bus.get_rom_boundary().0);
+
+                    for id in &self.handlers {
+                        self.link.respond(*id, Response::FetchedSfrs(self.cpu.data_bus.sfr_bank));
+                    }
                 }
             },
             Request::Memory(memory_msg) => match memory_msg {

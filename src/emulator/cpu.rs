@@ -2,6 +2,9 @@ use super::data_bus::*;
 use super::instruction::*;
 use super::rom_bus::*;
 
+use crate::ui::{CPUAgent, Request, MemoryMsg, SfrMsg};
+use yew::agent::Dispatcher;
+
 pub struct CPU {
     pub cycles: usize,
     pub data_bus: DataBus,
@@ -19,7 +22,7 @@ impl CPU {
         }
     }
 
-    pub fn step(&mut self) -> Result<(), String> {
+    pub fn step(&mut self, mut dispatcher: Dispatcher<CPUAgent>) -> Result<(), String> {
         let pc = self.data_bus.get_pc();
         let result = self.rom_bus.read_instruction(pc);
 
@@ -37,6 +40,8 @@ impl CPU {
             self.data_bus.inc_pc(1);
             1
         };
+
+        dispatcher.send(Request::Sfr(SfrMsg::FetchSfrs));
 
         Ok(())
     }

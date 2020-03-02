@@ -82,7 +82,7 @@ impl Component for SfrViewer {
 
         html! {
             <div id="sfr-viewer">
-                <h1>{ "SFR" }</h1>
+                <h1>{ "SFR's" }</h1>
                 <table>
                     <tbody>
                         { for sfr_data.iter().map(render_sfr) }

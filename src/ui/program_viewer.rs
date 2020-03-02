@@ -54,9 +54,11 @@ impl Component for ProgramViewer {
 
     fn view(&self) -> Html {
         let render_line = |(idx, (label, content)): (usize, &(String, String))| -> Html {
+            let node = NodeRef::default();
+
             if self.current_line == idx {
                 html! {
-                    <tr class="active">
+                    <tr class="active" ref=node>
                         <td>{ label }</td>
                         <td>{ content }</td>
                     </tr>

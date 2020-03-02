@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use yew::prelude::worker::*;
 use yew::prelude::*;
-use yew::services::ConsoleService;
+use yew::services::{ConsoleService, DialogService};
 use yew::agent::Dispatched;
 
 use crate::emulator::{parse_lst_file, ParseResult, SfrBank, CPU, parse_bin_file, PCL_ADDR};
@@ -10,6 +10,7 @@ pub struct CPUAgent {
     link: AgentLink<Self>,
     cpu: CPU,
     console: ConsoleService,
+    dialog: DialogService,
     handlers: Vec<HandlerId>,
 }
 
@@ -45,6 +46,7 @@ impl Agent for CPUAgent {
             link,
             cpu: CPU::new(),
             console: ConsoleService::new(),
+            dialog: DialogService::new(),
             handlers: Vec::new(),
         }
     }
@@ -67,7 +69,9 @@ impl Agent for CPUAgent {
             Request::Step => {
                 self.console.log("Running experimental step");
                 // TODO: find sth better to pass, that can respond directly to all handlers
-                self.cpu.step(Self::dispatcher()).unwrap();
+                if let Err(err) = self.cpu.step(Self::dispatcher()) {
+                    self.dialog.alert(err.as_str());
+                }
             }
             Request::Stop => {
                 self.console.log("Tried to stop program");

@@ -1,12 +1,13 @@
 @font-face {
-  font-family: DTM-Mono;
+  font-family: A-Goblin-Appears;
   font-style: normal;
   font-weight: normal;
-  src: url('DTM-Mono.otf') format('truetype');
+  src: url('A Goblin Appears!.otf') format('truetype')
 }
 
 * {
-  font-family: DTM-Mono;
+  font-family: A-Goblin-Appears;
+  font-size: 12px;
 }
 
 #dashboard {
@@ -14,6 +15,11 @@
   flex-direction: row;
 }
 
-table, tr {
-  border: 1px solid black;
+#program {
+  overflow-y: scroll;
+}
+
+.active {
+  background-color: black;
+  color: white;
 }

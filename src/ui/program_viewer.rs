@@ -9,6 +9,7 @@ pub struct ProgramViewer {
     link: ComponentLink<Self>,
     context: Box<dyn Bridge<CPUAgent>>,
     program: Option<ParseResult>,
+    current_line: usize,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -26,6 +27,7 @@ impl Component for ProgramViewer {
             link,
             context: CPUAgent::bridge(callback),
             program: None,
+            current_line: 0,
         }
     }
 
@@ -40,29 +42,41 @@ impl Component for ProgramViewer {
                 true
             }
             ProgramMsg::ContextMsg(Response::UpdatedMemory(PCL_ADDR, value)) => {
-                // TODO: highlight current line
-                false
+                if let Some(prog) = &self.program {
+                    let key = value as u16;
+                    self.current_line = *prog.address_info.get(&key).unwrap();
+                }
+                true
             }
             _ => false,
         }
     }
 
     fn view(&self) -> Html {
-        let render_line = |(label, content): &(String, String)| -> Html {
-            html! {
-                <tr>
-                    <td>{ label }</td>
-                    <td>{ content }</td>
-                </tr>
+        let render_line = |(idx, (label, content)): (usize, &(String, String))| -> Html {
+            if self.current_line == idx {
+                html! {
+                    <tr class="active">
+                        <td>{ label }</td>
+                        <td>{ content }</td>
+                    </tr>
+                }
+            } else {
+                html! {
+                    <tr>
+                        <td>{ label }</td>
+                        <td>{ content }</td>
+                    </tr>
+                }
             }
         };
 
         let render_program = || -> Html {
             if let Some(prog) = &self.program {
                 html! {
-                    <table>
+                    <table class="program">
                         <tbody>
-                            { for prog.content.iter().map(render_line) }
+                            { for prog.content.iter().enumerate().map(render_line) }
                         </tbody>
                     </table>
                 }

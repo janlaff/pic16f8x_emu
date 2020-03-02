@@ -4,7 +4,7 @@ use yew::prelude::*;
 use yew::services::ConsoleService;
 use yew::agent::Dispatched;
 
-use crate::emulator::{parse_lst_file, ParseResult, SfrBank, CPU, parse_bin_file};
+use crate::emulator::{parse_lst_file, ParseResult, SfrBank, CPU, parse_bin_file, PCL_ADDR};
 
 pub struct CPUAgent {
     link: AgentLink<Self>,
@@ -78,6 +78,7 @@ impl Agent for CPUAgent {
                 for id in &self.handlers {
                     self.link.respond(*id, Response::FetchedSfrs(self.cpu.data_bus.sfr_bank));
                     self.link.respond(*id, Response::FetchedMemory(self.cpu.data_bus.memory.to_vec()));
+                    self.link.respond(*id, Response::UpdatedMemory(PCL_ADDR, self.cpu.data_bus.sfr_bank.pcl));
                 }
             }
             Request::FetchMemory => {
@@ -105,11 +106,15 @@ impl Agent for CPUAgent {
 
                 let result = parse_bin_file(binary.as_slice());
                 self.cpu.rom_bus.load_program(result.bytecode.as_slice(), 0);
+                self.cpu.data_bus.set_pc(self.cpu.rom_bus.get_rom_boundary().0);
+                self.cpu.data_bus.sfr_bank = SfrBank::new();
+                self.cpu.data_bus.memory = [0; 0x80];
 
                 for id in &self.handlers {
                     self.link.respond(*id, Response::LoadedProgram(result.clone()));
                     self.link.respond(*id, Response::FetchedMemory(self.cpu.data_bus.memory.to_vec()));
                     self.link.respond(*id, Response::FetchedSfrs(self.cpu.data_bus.sfr_bank));
+                    self.link.respond(*id, Response::UpdatedMemory(PCL_ADDR, self.cpu.data_bus.sfr_bank.pcl));
                 }
             }
             Request::LoadLstFile(contents) => {
@@ -117,11 +122,15 @@ impl Agent for CPUAgent {
 
                 let result = parse_lst_file(contents.as_str());
                 self.cpu.rom_bus.load_program(result.bytecode.as_slice(), 0);
+                self.cpu.data_bus.set_pc(self.cpu.rom_bus.get_rom_boundary().0);
+                self.cpu.data_bus.sfr_bank = SfrBank::new();
+                self.cpu.data_bus.memory = [0; 0x80];
 
                 for id in &self.handlers {
                     self.link.respond(*id, Response::LoadedProgram(result.clone()));
                     self.link.respond(*id, Response::FetchedMemory(self.cpu.data_bus.memory.to_vec()));
                     self.link.respond(*id, Response::FetchedSfrs(self.cpu.data_bus.sfr_bank));
+                    self.link.respond(*id, Response::UpdatedMemory(PCL_ADDR, self.cpu.data_bus.sfr_bank.pcl));
                 }
             }
         }

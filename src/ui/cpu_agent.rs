@@ -66,6 +66,7 @@ impl Agent for CPUAgent {
             }
             Request::Step => {
                 self.console.log("Running experimental step");
+                // TODO: find sth better to pass, that can respond directly to all handlers
                 self.cpu.step(Self::dispatcher()).unwrap();
             }
             Request::Stop => {
@@ -100,6 +101,8 @@ impl Agent for CPUAgent {
                 }
             }
             Request::LoadBinFile(binary) => {
+                self.console.log("Loading bin file");
+
                 let result = parse_bin_file(binary.as_slice());
                 self.cpu.rom_bus.load_program(result.bytecode.as_slice(), 0);
 
@@ -110,6 +113,8 @@ impl Agent for CPUAgent {
                 }
             }
             Request::LoadLstFile(contents) => {
+                self.console.log("Loading lst file");
+
                 let result = parse_lst_file(contents.as_str());
                 self.cpu.rom_bus.load_program(result.bytecode.as_slice(), 0);
 

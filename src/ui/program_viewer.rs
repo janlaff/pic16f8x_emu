@@ -35,14 +35,31 @@ impl Component for ProgramViewer {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
+            ProgramMsg::ContextMsg(Response::LoadedProgram(program)) => {
+                self.program = Some(program);
+                true
+            }
             _ => false,
         }
     }
 
     fn view(&self) -> Html {
+        let render_program = || -> Html {
+            if let Some(prog) = &self.program {
+                html! { <h3>{ "Program loaded" }</h3> }
+            } else {
+                html! { <h3>{ "No program loaded" }</h3> }
+            }
+        };
+
         html! {
             <div>
                 <h1>{ "Program" }</h1>
+                <table>
+                    <tbody>
+                        { render_program() }
+                    </tbody>
+                </table>
             </div>
         }
     }

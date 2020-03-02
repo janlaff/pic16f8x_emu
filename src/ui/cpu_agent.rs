@@ -4,9 +4,6 @@ use yew::prelude::*;
 use yew::services::ConsoleService;
 use yew::agent::Dispatched;
 
-use super::ControlMsg;
-use super::MemoryMsg;
-use super::SfrMsg;
 use crate::emulator::{parse_lst_file, ParseResult, SfrBank, CPU};
 
 pub struct CPUAgent {
@@ -73,7 +70,6 @@ impl Agent for CPUAgent {
             }
             Request::Step => {
                 self.console.log("Running experimental step");
-                // TODO: pass component link to raise individual memory updates
                 self.cpu.step(Self::dispatcher()).unwrap();
             }
             Request::Stop => {

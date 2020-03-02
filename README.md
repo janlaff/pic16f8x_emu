@@ -19,6 +19,14 @@ This is my personal implementation of an emulator for the PIC16F8X architecture.
 - cargo-web (`cargo install cargo-web`) 
 
 ## Build & Run
+### Link build output
 ```
-$ cargo +nightly web start --target wasm32-unknown-unknown
+$ cd static
+static: $ ln -s ../target/wasm32-unknown-unknown/debug/pic16f8x_emu.js .
+static: $ ln -s ../target/wasm32-unknown-unknown/debug/pic16f8x_emu.wasm .
+```
+#### Start
+```
+static: $ cd ..
+$ cargo +nightly web start
 ```

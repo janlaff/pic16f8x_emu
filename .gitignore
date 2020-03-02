@@ -1,1 +1,2 @@
-emulator_frontend/package-lock.json
+static/pic16f8x_emu.js
+static/pic16f8x_emu.wasm

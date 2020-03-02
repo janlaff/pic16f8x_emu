@@ -1,8 +1,19 @@
+@font-face {
+  font-family: DTM-Mono;
+  font-style: normal;
+  font-weight: normal;
+  src: url('DTM-Mono.otf') format('truetype');
+}
+
+* {
+  font-family: DTM-Mono;
+}
+
 #dashboard {
   display: flex;
   flex-direction: row;
 }
 
-table, td, thead {
+table, tr {
   border: 1px solid black;
 }

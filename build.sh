@@ -1,4 +1,6 @@
 #!/bin/bash
 
 rustup run nightly wasm-pack build --target web
-rollup main.js --file bundle.js --format iife
+cp pkg/pic16f8x_emu.js live/
+cp pkg/pic16f8x_emu_bg.wasm live/
+rollup live/main.js --file live/bundle.js --format iife

@@ -542,7 +542,7 @@
     }
 
     async function main() {
-       await init('/pkg/pic16f8x_emu_bg.wasm');
+       await init('./pic16f8x_emu_bg.wasm');
        run_app();
     }
     main();

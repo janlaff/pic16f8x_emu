@@ -25,7 +25,7 @@ impl Component for Debugger {
         html! {
             <div>
                 <div id="dashboard">
-                    <div>
+                    <div id="left-side">
                         <MemoryViewer />
                         <SfrViewer />
                     </div>

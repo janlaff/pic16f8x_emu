@@ -81,8 +81,8 @@ impl Component for SfrViewer {
         };
 
         html! {
-            <div id="sfr-viewer">
-                <h1>{ "SFR's" }</h1>
+            <div id="sfr-viewer" class="nes-container with-title is-dark">
+                <p class="title">{ "SFR's" }</p>
                 <table>
                     <tbody>
                         { for sfr_data.iter().map(render_sfr) }

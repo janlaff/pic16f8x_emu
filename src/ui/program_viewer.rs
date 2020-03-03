@@ -102,8 +102,8 @@ impl Component for ProgramViewer {
         };
 
         html! {
-            <div id="program-viewer">
-                <h1>{ "Program" }</h1>
+            <div id="program-viewer" class="nes-container is-dark with-title">
+                <p class="title">{ "Program" }</p>
                 <div id="program-scroll-wrapper">
                     { render_program() }
                 </div>

@@ -1,13 +1,6 @@
-@font-face {
-  font-family: A-Goblin-Appears;
-  font-style: normal;
-  font-weight: normal;
-  src: url('A Goblin Appears!.otf');
-}
-
 * {
-  font-family: A-Goblin-Appears;
-  font-size: 10px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
 }
 
 body {
@@ -21,6 +14,7 @@ body {
   display: flex;
   flex-direction: row;
   height: 100vh;
+  padding: 10px;
 }
 
 #memory-viewer {
@@ -36,7 +30,7 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  height: 1px; /* Weirdest fix ever xD */
 }
 
 #program-content {
@@ -72,11 +66,13 @@ body {
 
 ::-webkit-scrollbar {
   width: 10px;
+  background: black;
+  margin-left: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: black;
-  border: 1px solid white;
+  background: white;
+  border: 5px solid black;
 }
 
 ::-webkit-scrollbar-thumb {

@@ -40,12 +40,12 @@ impl Component for Controls {
         let stop_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::Stop));
 
         html! {
-            <div id="controls">
-                <h1>{ "Controls" }</h1>
-                <button onclick=load_cb class="custom-btn">{ "Load demo rom" }</button>
-                <button onclick=run_cb class="custom-btn">{ "Run" }</button>
-                <button onclick=step_cb class="custom-btn">{ "Step" }</button>
-                <button onclick=stop_cb class="custom-btn">{ "Stop" }</button>
+            <div id="controls" class="nes-container is-dark with-title">
+                <p class="title">{ "Controls" }</p>
+                <button onclick=load_cb class="nes-btn">{ "Load demo rom" }</button>
+                <button onclick=run_cb class="nes-btn">{ "Run" }</button>
+                <button onclick=step_cb class="nes-btn">{ "Step" }</button>
+                <button onclick=stop_cb class="nes-btn">{ "Stop" }</button>
             </div>
         }
     }

@@ -66,8 +66,8 @@ impl Component for MemoryViewer {
         };
 
         html! {
-            <div id="memory-viewer">
-                <h1>{ "Memory" }</h1>
+            <div id="memory-viewer" class="nes-container is-dark with-title">
+                <p class="title">{ "Memory" }</p>
                 <table>
                     <tbody>
                         { for self.memory.chunks(8).enumerate().map(render_chunk) }

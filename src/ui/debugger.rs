@@ -29,7 +29,7 @@ impl Component for Debugger {
                         <MemoryViewer />
                         <SfrViewer />
                     </div>
-                    <div>
+                    <div id="right-side">
                         <Controls />
                         <ProgramViewer />
                     </div>

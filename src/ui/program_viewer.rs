@@ -4,6 +4,8 @@ use super::CPUAgent;
 use super::Request;
 use super::Response;
 use crate::emulator::ParseResult;
+use yew::utils::document;
+use yew::services::ConsoleService;
 
 pub struct ProgramViewer {
     link: ComponentLink<Self>,
@@ -45,8 +47,22 @@ impl Component for ProgramViewer {
                 if let Some(prog) = &self.program {
                     let key = value as u16;
                     self.current_line = *prog.address_info.get(&key).unwrap();
+
+                    let id = format!("line-{}", self.current_line);
+                    if let Some(window) = web_sys::window() {
+                        if let Some(doc) = window.document() {
+                            if let Some(line) = doc.get_element_by_id(id.as_str()) {
+                                line.scroll_into_view();
+                            } else {
+                                warn!("Line element not found");
+                            }
+                        }
+                    }
+
+                    true
+                } else {
+                    false
                 }
-                true
             }
             _ => false,
         }
@@ -54,18 +70,16 @@ impl Component for ProgramViewer {
 
     fn view(&self) -> Html {
         let render_line = |(idx, (label, content)): (usize, &(String, String))| -> Html {
-            let node = NodeRef::default();
-
             if self.current_line == idx {
                 html! {
-                    <tr class="active" ref=node>
+                    <tr class="active" id={ "line-".to_owned() + &idx.to_string() }>
                         <td>{ label }</td>
                         <td>{ content }</td>
                     </tr>
                 }
             } else {
                 html! {
-                    <tr>
+                    <tr id={ "line-".to_owned() + &idx.to_string() }>
                         <td>{ label }</td>
                         <td>{ content }</td>
                     </tr>

@@ -21,10 +21,11 @@ You can try the live version right now in your browser
 ## Dependencies
 - Rust Compiler (https://www.rust-lang.org/tools/install)
 - Rust nightly toolchain (`rustup install nightly`)
-- cargo-web (`cargo install cargo-web`) 
+- rollup (`npm i -g rollup`)
 
 ## Build & Run
 ```
-$ chmod +x build_and_run.sh
-$ ./build_and_run.sh
+$ rustup nightly run wasm-pack build --target web
+$ rollup main.js --file bundle.js --format iife
+$ python -m http.server
 ```

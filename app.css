@@ -1,0 +1,60 @@
+@font-face {
+  font-family: A-Goblin-Appears;
+  font-style: normal;
+  font-weight: normal;
+  src: url('A Goblin Appears!.otf');
+}
+
+* {
+  font-family: A-Goblin-Appears;
+  font-size: 10px;
+}
+
+body {
+  background-color: black;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+#dashboard {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+}
+
+#memory-viewer {
+  padding: 10px;
+}
+
+#sfr-viewer {
+  padding: 10px;
+}
+
+#program-viewer {
+  padding: 10px;
+  flex: 1;
+  overflow-y: hidden;
+}
+
+#right-side {
+  display: flex;
+  flex-direction: column;
+}
+
+#controls {
+  padding: 10px;
+}
+
+.custom-btn {
+  border: None;
+  outline: None;
+  background-color: white;
+  margin-right: 5px;
+  padding: 5px;
+}
+
+.active {
+  background-color: white;
+  color: black;
+}

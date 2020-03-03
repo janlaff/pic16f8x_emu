@@ -34,7 +34,7 @@ body {
 #program-viewer {
   padding: 10px;
   flex: 1;
-  overflow-y: hidden;
+  overflow-y: scroll;
 }
 
 #right-side {
@@ -57,4 +57,17 @@ body {
 .active {
   background-color: white;
   color: black;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: black;
+  border: 1px solid white;
+}
+
+::-webkit-scrollbar-thumb {
+  background: white;
 }

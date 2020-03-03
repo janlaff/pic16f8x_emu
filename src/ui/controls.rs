@@ -42,10 +42,10 @@ impl Component for Controls {
         html! {
             <div id="controls" class="nes-container is-dark with-title">
                 <p class="title">{ "Controls" }</p>
-                <button onclick=load_cb class="nes-btn">{ "Load demo rom" }</button>
-                <button onclick=run_cb class="nes-btn">{ "Run" }</button>
-                <button onclick=step_cb class="nes-btn">{ "Step" }</button>
-                <button onclick=stop_cb class="nes-btn">{ "Stop" }</button>
+                <button onclick=load_cb class="nes-btn is-primary">{ "Load demo rom" }</button>
+                <button onclick=run_cb class="nes-btn is-success">{ "Run" }</button>
+                <button onclick=step_cb class="nes-btn is-success">{ "Step" }</button>
+                <button onclick=stop_cb class="nes-btn is-error">{ "Stop" }</button>
             </div>
         }
     }

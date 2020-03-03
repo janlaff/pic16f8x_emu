@@ -90,7 +90,7 @@ impl Component for ProgramViewer {
         let render_program = || -> Html {
             if let Some(prog) = &self.program {
                 html! {
-                    <table>
+                    <table id="program-content">
                         <tbody>
                             { for prog.content.iter().enumerate().map(render_line) }
                         </tbody>
@@ -104,7 +104,9 @@ impl Component for ProgramViewer {
         html! {
             <div id="program-viewer">
                 <h1>{ "Program" }</h1>
-                { render_program() }
+                <div id="program-scroll-wrapper">
+                    { render_program() }
+                </div>
             </div>
         }
     }

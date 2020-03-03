@@ -34,7 +34,18 @@ body {
 #program-viewer {
   padding: 10px;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+#program-content {
   overflow-y: scroll;
+}
+
+#program-scroll-wrapper {
+  flex: 1;
+  overflow-y: auto;
 }
 
 #right-side {

@@ -273,6 +273,20 @@ function init(module) {
         var ret = getObject(arg0) instanceof Window;
         return ret;
     };
+    imports.wbg.__widl_f_add_1_DOMTokenList = function(arg0, arg1, arg2) {
+        try {
+            getObject(arg0).add(getStringFromWasm0(arg1, arg2));
+        } catch (e) {
+            handleError(e)
+        }
+    };
+    imports.wbg.__widl_f_remove_1_DOMTokenList = function(arg0, arg1, arg2) {
+        try {
+            getObject(arg0).remove(getStringFromWasm0(arg1, arg2));
+        } catch (e) {
+            handleError(e)
+        }
+    };
     imports.wbg.__widl_f_create_element_Document = function(arg0, arg1, arg2) {
         try {
             var ret = getObject(arg0).createElement(getStringFromWasm0(arg1, arg2));
@@ -328,6 +342,10 @@ function init(module) {
         var len0 = WASM_VECTOR_LEN;
         getInt32Memory0()[arg0 / 4 + 1] = len0;
         getInt32Memory0()[arg0 / 4 + 0] = ptr0;
+    };
+    imports.wbg.__widl_f_class_list_Element = function(arg0) {
+        var ret = getObject(arg0).classList;
+        return addHeapObject(ret);
     };
     imports.wbg.__widl_f_stop_propagation_Event = function(arg0) {
         getObject(arg0).stopPropagation();
@@ -478,7 +496,7 @@ function init(module) {
     imports.wbg.__wbindgen_throw = function(arg0, arg1) {
         throw new Error(getStringFromWasm0(arg0, arg1));
     };
-    imports.wbg.__wbindgen_closure_wrapper335 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper341 = function(arg0, arg1, arg2) {
 
         const state = { a: arg0, b: arg1, cnt: 1 };
         const real = (arg0) => {

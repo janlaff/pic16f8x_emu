@@ -75,7 +75,7 @@ impl Component for ProgramViewer {
     }
 
     fn view(&self) -> Html {
-        let render_line = |(idx, (label, content)): (usize, &(String, String))| -> Html {
+        let render_line = |(idx, (label, content)): (usize, &(String, String))| {
             html! {
                 <tr id={ "line-".to_owned() + &idx.to_string() }>
                     <td>{ label }</td>
@@ -84,7 +84,7 @@ impl Component for ProgramViewer {
             }
         };
 
-        let render_program = || -> Html {
+        let render_program = || {
             if let Some(prog) = &self.program {
                 html! {
                     <table id="program-content">

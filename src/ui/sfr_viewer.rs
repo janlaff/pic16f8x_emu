@@ -71,7 +71,7 @@ impl Component for SfrViewer {
             ("EECON2", self.localSfrs.eecon2),
         ];
 
-        let render_sfr = |(label, value): &(&str, u8)| -> Html {
+        let render_sfr = |(label, value): &(&str, u8)| {
             html! {
                 <tr>
                     <td>{ label }</td>

@@ -1,0 +1,107 @@
+                    00001           ;TPicSim4
+                    00002           ;Programm zum Test des 16F84-Simulators.
+                    00003           ;Es werden die Befehle DECFSZ, INCFSZ, RLF, RRF geprüft
+                    00004           ;(c) St. Lehmann
+                    00005           ;Ersterstellung: 23.03.2016
+                    00006           ;Korrektur und ergänzt 09.05.2017 durch: Dominik Vogel
+                    00007           ;mod. 18.10.2018 für HSO
+                    00008           ;
+                    00009           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00010           
+                    00011           ;Definition einiger Symbole
+                    00012           ;für den Benutzer frei verwendbare Register
+                    00013           wert1    equ 0ch             ;Variable Nr.1
+                    00014           wert2    equ 0dh             ;Variable Nr.2
+                    00015           ergeb    equ 0eh             ;Variable Nr.3
+                    00016           
+                    00017           ;Definition des Prozessors
+                    00018           device 16F84
+                    00019             
+                    00020           ;Festlegen des Codebeginns
+                    00021           org 0
+                    00022  loop     
+0000 3011           00023           movlw 11h           ;in W steht nun 11h, DC=?, C=?, Z=?
+0001 008C           00024           movwf wert1         ;diesen Wert abspeichern, DC=?, C=?, Z=?
+0002 3E11           00025           addlw 11h           ;löscht u.a. das Carry-Flag,  DC=0, C=0, Z=0
+0003 0D8C           00026           rlf wert1           ;W=22h, wert1=22h, wert2=?? , DC=0, C=0, Z=0
+0004 0D8C           00027           rlf wert1           ;W=22h, wert1=44h, wert2=?? , DC=0, C=0, Z=0
+0005 0D8C           00028           rlf wert1           ;W=22h, wert1=88h, wert2=?? , DC=0, C=0, Z=0
+0006 0D0C           00029           rlf wert1,w         ;W=10h, wert1=88h, wert2=?? , DC=0, C=1, Z=0
+0007 0D8C           00030           rlf wert1           ;W=10h, wert1=11h, wert2=?? , DC=0, C=1, Z=0
+0008 0D0C           00031           rlf wert1,w         ;W=23h, wert1=11h, wert2=?? , DC=0, C=0, Z=0
+0009 0C8C           00032           rrf wert1           ;W=23h, wert1=08h, wert2=?? , DC=0, C=1, Z=0
+000A 008D           00033           movwf wert2         ;W=23h, wert1=08h, wert2=23h, DC=0, C=1, Z=0
+000B 0C8D           00034           rrf wert2           ;W=23h, wert1=08h, wert2=91h, DC=0, C=1, Z=0
+000C 0C0D           00035           rrf wert2,w         ;W=C8h, wert1=08h, wert2=91h, DC=0, C=1, Z=0
+                    00036             
+000D 3009           00037           movlw 9             ;W=09h, wert1=08h, wert2=91h, DC=0, C=1, Z=0
+000E 008C           00038           movwf wert1         ;W=09h, wert1=09h, wert2=91h, DC=0, C=1, Z=0
+000F 0100           00039           clrw                ;W=00h, wert1=09h, wert2=91h, DC=0, C=1, Z=1
+                    00040  loop1    
+0010 3E01           00041           addlw 1             ;W=01h, DC=0, C=0, Z=0
+                    00042           ;W=02h, DC=0, C=0, Z=0
+                    00043           ;W=03h, DC=0, C=0, Z=0
+                    00044           ;W=04h, DC=0, C=0, Z=0
+                    00045           ;W=05h, DC=0, C=0, Z=0
+                    00046           ;W=06h, DC=0, C=0, Z=0
+                    00047           ;W=07h, DC=0, C=0, Z=0
+                    00048           ;W=08h, DC=0, C=0, Z=0
+                    00049           ;W=09h, DC=0, C=0, Z=0
+0011 078D           00050           addwf wert2         ;wert2=92h, DC=0, C=0, Z=0
+                    00051           ;wert2=94h, DC=0, C=0, Z=0
+                    00052           ;wert2=97h, DC=0, C=0, Z=0
+                    00053           ;wert2=9Bh, DC=0, C=0, Z=0
+                    00054           ;wert2=A0h, DC=1, C=0, Z=0
+                    00055           ;wert2=A6h, DC=0, C=0, Z=0
+                    00056           ;wert2=ADh, DC=0, C=0, Z=0
+                    00057           ;wert2=B5h, DC=1, C=0, Z=0
+                    00058           ;wert2=BEh, DC=0, C=0, Z=0
+0012 0B8C           00059           decfsz wert1        ;wert1=08h, wert1=07h, ... DC,C und Z bleiben unverändert
+0013 2810           00060           goto loop1
+                    00061             
+0014 30F0           00062           movlw 0f0h          ;Wert wird bis 00h (über FFh) hochgezählt
+0015 008C           00063           movwf wert1
+0016 018D           00064           clrf wert2
+0017 0100           00065           clrw
+                    00066  loop2    
+0018 070C           00067           addwf wert1,w       ;W=F0h, wert1=F0h, wert2=00h, DC=0, C=0, Z=0      
+                    00068           ;W=E1h, wert1=F1h, wert2=01h, DC=0, C=1, Z=0
+                    00069           ;W=D3h, wert1=F2h, wert2=02h, DC=0, C=1, Z=0
+                    00070           ;W=C6h, wert1=F3h, wert2=03h, DC=0, C=1, Z=0
+                    00071           ;W=BAh, wert1=F4h, wert2=04h, DC=0, C=1, Z=0
+                    00072           ;W=AFh, wert1=F5h, wert2=05h, DC=0, C=1, Z=0
+                    00073           ;W=A5h, wert1=F6h, wert2=06h, DC=1, C=1, Z=0
+                    00074           ;W=9Ch, wert1=F7h, wert2=07h, DC=0, C=1, Z=0
+                    00075           ;W=94h, wert1=F8h, wert2=08h, DC=1, C=1, Z=0
+                    00076           ;W=8Dh, wert1=F9h, wert2=09h, DC=0, C=1, Z=0
+                    00077           ;W=87h, wert1=FAh, wert2=0Ah, DC=1, C=1, Z=0
+                    00078           ;W=82h, wert1=FBh, wert2=0Bh, DC=1, C=1, Z=0
+                    00079           ;W=7Eh, wert1=FCh, wert2=0Ch, DC=0, C=1, Z=0
+                    00080           ;W=7Bh, wert1=FDh, wert2=0Dh, DC=1, C=1, Z=0
+                    00081           ;W=79h, wert1=FEh, wert2=0Eh, DC=1, C=1, Z=0
+                    00082           ;W=78h, wert1=FFh, wert2=0Fh, DC=1, C=1, Z=0
+                    00083             
+0019 0A8D           00084           incf wert2          ;W=F0h, wert1=F0h, wert2=01h, DC=0, C=0, Z=0
+                    00085           ;W=E1h, wert1=F1h, wert2=02h, DC=0, C=1, Z=0
+                    00086             
+                    00087           ;W=D3h, wert1=F2h, wert2=03h, DC=0, C=1, Z=0
+                    00088           ;W=C6h, wert1=F3h, wert2=04h, DC=0, C=1, Z=0
+                    00089           ;W=BAh, wert1=F4h, wert2=05h, DC=0, C=1, Z=0
+                    00090           ;W=AFh, wert1=F5h, wert2=06h, DC=0, C=1, Z=0
+                    00091           ;W=A5h, wert1=F6h, wert2=07h, DC=1, C=1, Z=0
+                    00092           ;W=9Ch, wert1=F7h, wert2=08h, DC=0, C=1, Z=0
+                    00093           ;W=94h, wert1=F8h, wert2=09h, DC=1, C=1, Z=0
+                    00094           ;W=8Dh, wert1=F9h, wert2=0Ah, DC=0, C=1, Z=0
+                    00095           ;W=87h, wert1=FAh, wert2=0Bh, DC=1, C=1, Z=0
+                    00096           ;W=82h, wert1=FBh, wert2=0Ch, DC=1, C=1, Z=0
+                    00097           ;W=7Eh, wert1=FCh, wert2=0Dh, DC=0, C=1, Z=0
+                    00098           ;W=7Bh, wert1=FDh, wert2=0Eh, DC=1, C=1, Z=0
+                    00099           ;W=79h, wert1=FEh, wert2=0Fh, DC=1, C=1, Z=0
+                    00100           ;W=78h, wert1=FFh, wert2=10h, DC=1, C=1, Z=0
+001A 0F8C           00101           incfsz wert1        ;wert1=F1h, F2h, F3h .. FFh, 00h, wert2 und Flags bleiben unverändert
+001B 2818           00102           goto loop2         
+                    00103             
+                    00104  ende     
+001C 281C           00105           goto ende           ;Endlosschleife, verhindert Nirwana
+                    00106           
+                    00107             

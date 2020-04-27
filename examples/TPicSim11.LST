@@ -1,0 +1,52 @@
+                    00001           ;TPicSim11
+                    00002           ;Programm zum Test des 16F84-Simulators.
+                    00003           ;Es wird der Watchdog mit und ohne Vorteiler geprüft
+                    00004           ;(c) St. Lehmann  
+                    00005           ;19.04.2014 
+                    00006           ;18.10.2018 mod. für HSO
+                    00007           
+                    00008           
+                    00009           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00010           
+                    00011           ;Definition einiger Symbole
+                    00012           indirect equ 0
+                    00013           status   equ 03h
+                    00014           fsr      equ 04h
+                    00015           ra       equ 05h
+                    00016           rb       equ 06h
+                    00017           count    equ 0ch
+                    00018           
+                    00019           ;Definition des Prozessors
+                    00020           device 16F84
+                    00021           ;Festlegen des Codebeginns
+                    00022           org 0
+                    00023  start    
+                    00024           ;zuerst wird der VT dem Timer zugewiesen. Damit bekommt der Watchdog
+                    00025           ;die kleinste Zeit (ca. 18 ms) zugewiesen
+0000 3000           00026           movlw 00000000B     ;Option-Register entsp. initialisieren
+0001 1683           00027           bsf status,5        ;Bank umschalten
+0002 0081           00028           movwf 1             ;Option-Register
+0003 1283           00029           bcf status,5
+0004 01A0           00030           clrf 20h
+0005 01A1           00031           clrf 21h
+0006 01A2           00032           clrf 22h
+0007 01A3           00033           clrf 23h
+                    00034  loop1    
+0008 0FA0           00035           incfsz 20h
+0009 2808           00036           goto loop1          ;kein Überlauf
+000A 0FA1           00037           incfsz 21h          ;nächste Stelle
+000B 2808           00038           goto loop1          ;kein Überlauf
+000C 0FA2           00039           incfsz 22h          ;ja
+000D 2808           00040           goto loop1
+000E 0FA3           00041           incfsz 23h
+000F 2808           00042           goto loop1
+                    00043           
+                    00044           ;******************************************************************
+                    00045           ;in 20h steht ca. 5fH
+                    00046           ;in 21H ca. 17H
+                    00047           ;Zählerstand 16-Bit ca. 175FH = 5983d
+                    00048           
+                    00049  ende     
+0010 2810           00050           goto ende           ;Endlosschleife, verhindert Nirwana
+                    00051           
+                    00052             

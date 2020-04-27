@@ -1,0 +1,51 @@
+                    00001           ;TPicSim5
+                    00002           ;Programm zum Test des 16F84-Simulators.
+                    00003           ;Es werden die Befehle BCF, BSF, BTFSC und BTFSS geprüft
+                    00004           ;(c) St. Lehmann
+                    00005           ;Ersterstellung: 23.03.2016
+                    00006           ;mod. 18.10.2018 für HSO
+                    00007           ;
+                    00008           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00009           
+                    00010           ;Definition einiger Symbole
+                    00011           ;zuerst Hardware-Register
+                    00012           status   equ 03h
+                    00013           ra       equ 05h
+                    00014           rb       equ 06h
+                    00015           
+                    00016           ;für den Benutzer frei verwendbare Register
+                    00017           wert1    equ 0ch             ;Variable Nr.1
+                    00018           wert2    equ 0dh             ;Variable Nr.2
+                    00019           ergeb    equ 0eh             ;Variable Nr.3
+                    00020           
+                    00021           ;Definition des Prozessors
+                    00022           device 16F84
+                    00023             
+                    00024           ;Festlegen des Codebeginns
+                    00025           org 0
+                    00026  loop     
+0000 3011           00027           movlw 11h           ;in W steht nun 11h, DC=?, C=?, Z=?
+0001 008C           00028           movwf wert1         ;diesen Wert abspeichern, DC=?, C=?, Z=?
+0002 018D           00029           clrf wert2          ;W=11h, wert1=11h, wert2=00h, DC=?, C=?, Z=1
+0003 178C           00030           bsf wert1,7         ;W=11h, wert1=91h, wert2=00h, DC=?, C=?, Z=1
+0004 158C           00031           bsf wert1,3         ;W=11h, wert1=99h, wert2=00h, DC=?, C=?, Z=1
+0005 120C           00032           bcf wert1,4         ;W=11h, wert1=89h, wert2=00h, DC=?, C=?, Z=1
+0006 100C           00033           bcf wert1,0         ;W=11h, wert1=88h, wert2=00h, DC=?, C=?, Z=1
+                    00034             
+0007 180C           00035           btfsc wert1,0
+0008 0A8D           00036           incf wert2
+0009 0A8D           00037           incf wert2
+000A 198C           00038           btfsc wert1,3
+000B 0A8D           00039           incf wert2
+000C 0A8D           00040           incf wert2
+000D 1D0C           00041           btfss wert1,2
+000E 0A8D           00042           incf wert2
+000F 0A8D           00043           incf wert2
+0010 1F8C           00044           btfss wert1,7
+0011 0A8D           00045           incf wert2
+0012 038D           00046           decf wert2          ;in wert2 muss 04h stehen
+                    00047             
+                    00048  ende     
+0013 2813           00049           goto ende           ;Endlosschleife, verhindert Nirwana
+                    00050           
+                    00051             

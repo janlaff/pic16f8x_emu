@@ -1,0 +1,45 @@
+                    00001           ;TPicSim13
+                    00002           ;Programm zum Test des 16F84-Simulators.
+                    00003           ;Funktion: Lauflicht. Die Richtung wird durch RA,0 bestimmt
+                    00004           ;(c) St. Lehmann   Ersterstellung: 11.05.2011
+                    00005           ;Definition einiger Symbole
+                    00006           ;18.10.2018 mod. für HSO
+                    00007           
+                    00008           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00009           
+                    00010           indirect equ       0
+                    00011           status   equ       03h
+                    00012           fsr      equ       04h
+                    00013           ra       equ       05h
+                    00014           rb       equ       06h
+                    00015           rp0      equ       5
+                    00016             
+                    00017           ;Definition des Prozessors
+                    00018           device    16F84
+                    00019             
+                    00020           ;Festlegen des Codebeginns
+                    00021           org       0
+                    00022  start      
+0000 1683           00023           bsf       status,rp0          ;auf Bank 1 umschalten
+0001 0186           00024           clrf      rb                  ;TRIS RB auf 0 = Ausgang setzen
+0002 1283           00025           bcf       status,rp0          ;zurück auf Bank 0
+0003 0186           00026           clrf      rb                  ;Ausgäbge auf 0
+0004 1403           00027           bsf       status,0            ;Carry auf 1 setzen
+                    00028  loop       
+0005 1C05           00029           btfss     ra,0                ;in welche Richtung?
+0006 280B           00030           goto      links
+                    00031  rechts   
+0007 0C86           00032           rrf       rb
+0008 1803           00033           btfsc     status,0            ;ist Carry 1?
+0009 0C86           00034           rrf       rb                  ;ja, dann nochmal schieben
+000A 2805           00035           goto      loop
+                    00036             
+                    00037  links    
+000B 0D86           00038           rlf       rb
+000C 1803           00039           btfsc     status,0            ;ist Carry = 1
+000D 0D86           00040           rlf       rb                  ;ja, nochmal schieben
+000E 2805           00041           goto      loop
+                    00042             
+                    00043  ende     
+000F 280F           00044           goto      ende
+                    00045             

@@ -1,0 +1,315 @@
+                    00001           ;TPicSim10
+                    00002           ;Programm zum Test des 16F84-Simulators.
+                    00003           ;Es wird die richtige Funktionsweise von PCL und PCLATH am Beispiel
+                    00004           ;eines Tabellenzugriffs getestet
+                    00005           ;(c) St. Lehmann  
+                    00006           ;19.04.2014 
+                    00007           ;18.10.2018 mod. für HSO
+                    00008           
+                    00009           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00010             
+                    00011           ;Definition einiger Symbole
+                    00012           indirect equ 0
+                    00013           pcl      equ 02h
+                    00014           status   equ 03h
+                    00015           fsr      equ 04h
+                    00016           ra       equ 05h
+                    00017           rb       equ 06h
+                    00018           pclath   equ 0ah
+                    00019           intcon   equ 0bh
+                    00020           
+                    00021           ;Definition des Prozessors
+                    00022           device 16F84
+                    00023           ;Festlegen des Codebeginns
+                    00024           org 0
+                    00025  start    
+0000 3000           00026           movlw 0             ;Index für Tabellenzugriff in 0FH
+0001 008F           00027           movwf 0fh
+0002 3005           00028           movlw 5             ;insgesamt 5 Tabellenzugriffe
+0003 008E           00029           movwf 0eh
+0004 3010           00030           movlw 10h           ;Ergebnis wird ab 10H abgespeichert
+0005 0084           00031           movwf fsr
+                    00032  loop     
+0006 3001           00033           movlw 1             ;PCLATH setzen, damit auf den Bereich 256-511 zugegriffen werden kann
+0007 008A           00034           movwf pclath
+0008 080F           00035           movf 0fh,w         
+0009 2109           00036           call tabelle
+000A 0080           00037           movwf indirect
+000B 0A84           00038           incf fsr
+000C 0A8F           00039           incf 0fh
+000D 0B8E           00040           decfsz 0eh
+000E 2806           00041           goto loop
+000F 018A           00042           clrf pclath
+0010 080F           00043           movf 0fh,w
+0011 2109           00044           call tabelle        ;Fehler, der ADDWF PCL kommt nicht in die Tabelle. Grund: in W steht 5
+                    00045           ;im PC 109 bzw. nach dem Fetch 10A. Zu diesem Wert wird 5 addiert und
+                    00046           ;die oberen Bits auf 0 gesetzt (PCLATH=0). Damit steht im PC der Wert
+                    00047           ;0Fh. Dorthin springt der PIC durch den ADDWF-Befehl. Hier verweilt
+                    00048           ;das Programm während der Stack immer weiter wächst.
+                    00049             
+                    00050           
+                    00051  ende     
+0012 2812           00052           goto ende           ;Endlosschleife, verhindert Nirwana
+                    00053           
+0013 0000           00054           nop
+0014 0000           00055           nop
+0015 0000           00056           nop
+0016 0000           00057           nop
+0017 0000           00058           nop
+0018 0000           00059           nop
+0019 0000           00060           nop
+001A 0000           00061           nop
+001B 0000           00062           nop
+001C 0000           00063           nop
+001D 0000           00064           nop
+001E 0000           00065           nop
+001F 0000           00066           nop
+0020 0000           00067           nop
+0021 0000           00068           nop
+0022 0000           00069           nop
+0023 0000           00070           nop
+0024 0000           00071           nop
+0025 0000           00072           nop
+0026 0000           00073           nop
+0027 0000           00074           nop
+0028 0000           00075           nop
+0029 0000           00076           nop
+002A 0000           00077           nop
+002B 0000           00078           nop
+002C 0000           00079           nop
+002D 0000           00080           nop
+002E 0000           00081           nop
+002F 0000           00082           nop
+0030 0000           00083           nop
+0031 0000           00084           nop
+0032 0000           00085           nop
+0033 0000           00086           nop
+0034 0000           00087           nop
+0035 0000           00088           nop
+0036 0000           00089           nop
+0037 0000           00090           nop
+0038 0000           00091           nop
+0039 0000           00092           nop
+003A 0000           00093           nop
+003B 0000           00094           nop
+003C 0000           00095           nop
+003D 0000           00096           nop
+003E 0000           00097           nop
+003F 0000           00098           nop
+0040 0000           00099           nop
+0041 0000           00100           nop
+0042 0000           00101           nop
+0043 0000           00102           nop
+0044 0000           00103           nop
+0045 0000           00104           nop
+0046 0000           00105           nop
+0047 0000           00106           nop
+0048 0000           00107           nop
+0049 0000           00108           nop
+004A 0000           00109           nop
+004B 0000           00110           nop
+004C 0000           00111           nop
+004D 0000           00112           nop
+004E 0000           00113           nop
+004F 0000           00114           nop
+0050 0000           00115           nop
+0051 0000           00116           nop
+0052 0000           00117           nop
+0053 0000           00118           nop
+0054 0000           00119           nop
+0055 0000           00120           nop
+0056 0000           00121           nop
+0057 0000           00122           nop
+0058 0000           00123           nop
+0059 0000           00124           nop
+005A 0000           00125           nop
+005B 0000           00126           nop
+005C 0000           00127           nop
+005D 0000           00128           nop
+005E 0000           00129           nop
+005F 0000           00130           nop
+0060 0000           00131           nop
+0061 0000           00132           nop
+0062 0000           00133           nop
+0063 0000           00134           nop
+0064 0000           00135           nop
+0065 0000           00136           nop
+0066 0000           00137           nop
+0067 0000           00138           nop
+0068 0000           00139           nop
+0069 0000           00140           nop
+006A 0000           00141           nop
+006B 0000           00142           nop
+006C 0000           00143           nop
+006D 0000           00144           nop
+006E 0000           00145           nop
+006F 0000           00146           nop
+0070 0000           00147           nop
+0071 0000           00148           nop
+0072 0000           00149           nop
+0073 0000           00150           nop
+0074 0000           00151           nop
+0075 0000           00152           nop
+0076 0000           00153           nop
+0077 0000           00154           nop
+0078 0000           00155           nop
+0079 0000           00156           nop
+007A 0000           00157           nop
+007B 0000           00158           nop
+007C 0000           00159           nop
+007D 0000           00160           nop
+007E 0000           00161           nop
+007F 0000           00162           nop
+0080 0000           00163           nop
+0081 0000           00164           nop
+0082 0000           00165           nop
+0083 0000           00166           nop
+0084 0000           00167           nop
+0085 0000           00168           nop
+0086 0000           00169           nop
+0087 0000           00170           nop
+0088 0000           00171           nop
+0089 0000           00172           nop
+008A 0000           00173           nop
+008B 0000           00174           nop
+008C 0000           00175           nop
+008D 0000           00176           nop
+008E 0000           00177           nop
+008F 0000           00178           nop
+0090 0000           00179           nop
+0091 0000           00180           nop
+0092 0000           00181           nop
+0093 0000           00182           nop
+0094 0000           00183           nop
+0095 0000           00184           nop
+0096 0000           00185           nop
+0097 0000           00186           nop
+0098 0000           00187           nop
+0099 0000           00188           nop
+009A 0000           00189           nop
+009B 0000           00190           nop
+009C 0000           00191           nop
+009D 0000           00192           nop
+009E 0000           00193           nop
+009F 0000           00194           nop
+00A0 0000           00195           nop
+00A1 0000           00196           nop
+00A2 0000           00197           nop
+00A3 0000           00198           nop
+00A4 0000           00199           nop
+00A5 0000           00200           nop
+00A6 0000           00201           nop
+00A7 0000           00202           nop
+00A8 0000           00203           nop
+00A9 0000           00204           nop
+00AA 0000           00205           nop
+00AB 0000           00206           nop
+00AC 0000           00207           nop
+00AD 0000           00208           nop
+00AE 0000           00209           nop
+00AF 0000           00210           nop
+00B0 0000           00211           nop
+00B1 0000           00212           nop
+00B2 0000           00213           nop
+00B3 0000           00214           nop
+00B4 0000           00215           nop
+00B5 0000           00216           nop
+00B6 0000           00217           nop
+00B7 0000           00218           nop
+00B8 0000           00219           nop
+00B9 0000           00220           nop
+00BA 0000           00221           nop
+00BB 0000           00222           nop
+00BC 0000           00223           nop
+00BD 0000           00224           nop
+00BE 0000           00225           nop
+00BF 0000           00226           nop
+00C0 0000           00227           nop
+00C1 0000           00228           nop
+00C2 0000           00229           nop
+00C3 0000           00230           nop
+00C4 0000           00231           nop
+00C5 0000           00232           nop
+00C6 0000           00233           nop
+00C7 0000           00234           nop
+00C8 0000           00235           nop
+00C9 0000           00236           nop
+00CA 0000           00237           nop
+00CB 0000           00238           nop
+00CC 0000           00239           nop
+00CD 0000           00240           nop
+00CE 0000           00241           nop
+00CF 0000           00242           nop
+00D0 0000           00243           nop
+00D1 0000           00244           nop
+00D2 0000           00245           nop
+00D3 0000           00246           nop
+00D4 0000           00247           nop
+00D5 0000           00248           nop
+00D6 0000           00249           nop
+00D7 0000           00250           nop
+00D8 0000           00251           nop
+00D9 0000           00252           nop
+00DA 0000           00253           nop
+00DB 0000           00254           nop
+00DC 0000           00255           nop
+00DD 0000           00256           nop
+00DE 0000           00257           nop
+00DF 0000           00258           nop
+00E0 0000           00259           nop
+00E1 0000           00260           nop
+00E2 0000           00261           nop
+00E3 0000           00262           nop
+00E4 0000           00263           nop
+00E5 0000           00264           nop
+00E6 0000           00265           nop
+00E7 0000           00266           nop
+00E8 0000           00267           nop
+00E9 0000           00268           nop
+00EA 0000           00269           nop
+00EB 0000           00270           nop
+00EC 0000           00271           nop
+00ED 0000           00272           nop
+00EE 0000           00273           nop
+00EF 0000           00274           nop
+00F0 0000           00275           nop
+00F1 0000           00276           nop
+00F2 0000           00277           nop
+00F3 0000           00278           nop
+00F4 0000           00279           nop
+00F5 0000           00280           nop
+00F6 0000           00281           nop
+00F7 0000           00282           nop
+00F8 0000           00283           nop
+00F9 0000           00284           nop
+00FA 0000           00285           nop
+00FB 0000           00286           nop
+00FC 0000           00287           nop
+00FD 0000           00288           nop
+00FE 0000           00289           nop
+00FF 0000           00290           nop
+0100 0000           00291           nop
+0101 0000           00292           nop
+0102 0000           00293           nop
+0103 0000           00294           nop
+0104 0000           00295           nop
+0105 0000           00296           nop
+0106 0000           00297           nop
+0107 0000           00298           nop
+0108 0000           00299           nop
+                    00300  Tabelle  
+0109 0782           00301           addwf pcl         
+010A 3460           00302           retlw 60h
+010B 3461           00303           retlw 61h
+010C 3462           00304           retlw 62h
+010D 3463           00305           retlw 63h
+010E 3464           00306           retlw 64h
+010F 3465           00307           retlw 65h
+0110 3466           00308           retlw 66h
+0111 3467           00309           retlw 67h
+0112 3468           00310           retlw 68h
+0113 3469           00311           retlw 69h
+0114 346A           00312           retlw 6Ah
+                    00313             
+                    00314           
+                    00315             

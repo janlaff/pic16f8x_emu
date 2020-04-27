@@ -1,0 +1,33 @@
+                    00001           ;TPicSim2
+                    00002           ;Programm zum Test des 16F84-Simulators.
+                    00003           ;Es werden CALL, GOTO, RETLW, RETURN geprüft (kein RETFIE)
+                    00004           ;(c) St. Lehmann
+                    00005           ;Ersterstellung: 23.03.2016
+                    00006           ;mod. 18.10.2018 für HSO
+                    00007           ;
+                    00008           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00009           
+                    00010           ;Definition des Prozessors
+                    00011           device 16F84
+                    00012             
+                    00013           ;Festlegen des Codebeginns
+                    00014           org 0
+                    00015  loop     
+0000 3011           00016           movlw 11h           ;in W steht nun 11h, Statusreg. unverändert
+0001 2006           00017           call up1            ;beim Call wird Rücksprungadresse auf Stack gelegt
+0002 0000           00018           nop                 ;W = 36h, C=0, DC=0, Z=0
+0003 2008           00019           call up2            ;in W steht der Rückgabewert
+0004 0000           00020           nop                 ;W = 77h, DC=0, C=0, Z=0;
+0005 2800           00021           goto loop
+                    00022           
+                    00023           ;UP1 zählt zu W den Wert 25h hinzu und kehrt mit RETURN zurück
+0006 3E25           00024  up1      addlw 25h           ;W = 36h, DC=0, C=0, Z=0
+0007 0008           00025           return
+                    00026             
+                    00027           ;UP2 kehrt mit der Konstanten 77h zurück
+0008 3477           00028  up2      retlw 77h
+                    00029           
+                    00030  ende     
+0009 2809           00031           goto ende           ;Endlosschleife, verhindert Nirwana
+                    00032           
+                    00033             

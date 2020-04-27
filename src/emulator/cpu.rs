@@ -64,6 +64,9 @@ impl CPU {
             Instruction::MovLw(Literal(value)) => {
                 self.data_bus.sfr_bank.w = value;
             }
+            Instruction::AndLw(Literal(value)) => {
+                self.data_bus.sfr_bank.w &= value;
+            }
             Instruction::BsF(FileRegister(destination), BitIndex(idx)) => {
                 self.data_bus.set_bit(destination, idx);
             }

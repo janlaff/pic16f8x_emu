@@ -1,0 +1,44 @@
+                    00001           ;TPicSim9
+                    00002           ;Programm zum Test des 16F84-Simulators.
+                    00003           ;Funktion: SLEEP-Befehl
+                    00004           ;(c) St. Lehmann   Ersterstellung: 31.03.2016
+                    00005           ;26.04.2019 T0 nach dem SLEEP vertauscht                             
+                    00006           ;Definition einiger Symbole
+                    00007           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00008           
+                    00009           status   equ       03h
+                    00010           rb       equ       06h
+                    00011           var      equ       0ch
+                    00012           liste1   equ       10h
+                    00013           liste2   equ       11h
+                    00014           liste3   equ       12h
+                    00015           liste4   equ       13h
+                    00016           
+                    00017           ;Definition des Prozessors
+                    00018           device    16F84
+                    00019             
+                    00020           ;Festlegen des Codebeginns
+                    00021           org       0
+                    00022           ;wenn mit eingeschaltetem Watchdog-Timer der SLEEP-Befehl aktiviert wird,
+                    00023           ;dann wird das Programm nach ca. 2,3ms weiter laufen.
+                    00024           
+                    00025           ;wenn der Watchdog-Timer ausgeschaltet ist, beendet ein RESET den SLEEP-Modus
+                    00026           ;bei einem RESET am MCLR-Pin springt der Controller zur Adresse 0 /PD und /TO
+                    00027           ;sind entsprechend gesetzt.
+                    00028           ;bei einem Watchdog-Timeout macht der Controller beim Befehl der auf den SLEEP
+                    00029           ;folgt weiter. Das gilt auch, wenn ein Interrupt den SLEEP beendet.
+                    00030           
+                    00031           ;Auch ein Interrupt an RB0 oder RB4 bis RB7 beendet den SLEEP-Modus
+                    00032  start      
+0000 018C           00033           clrf      var                 ;
+0001 0E03           00034           swapf     status,w
+0002 0090           00035           movwf     liste1              ;T0=1 , PD=1
+0003 0063           00036           sleep                         ;warte bis Watchdogtimer anspricht
+0004 0E03           00037           swapf     status,w
+0005 0091           00038           movwf     liste2              ;T0=0 , PD=0 bei Watchdog-Timeout
+                    00039           							  ;T0=1 , PD=0 bei RESET oder Interrupt
+                    00040             
+                    00041             
+                    00042  ende     
+0006 2806           00043           goto      ende         
+                    00044             

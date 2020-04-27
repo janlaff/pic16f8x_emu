@@ -34,7 +34,7 @@ impl Component for Controls {
     }
 
     fn view(&self) -> Html {
-        let load_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::LoadLstFile(String::from(include_str!("../../SimTest01.LST")))));
+        let load_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::LoadLstFile(String::from(include_str!("../../examples/TPicSim1.LST")))));
         let run_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::Run));
         let step_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::Step));
         let stop_cb = self.link.callback(|_| ControlMsg::ContextMsg(Request::Stop));

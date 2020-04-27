@@ -1,0 +1,84 @@
+                    00001           ;TPicSim7
+                    00002           ;Programm zum Test des 16F84-Simulators.
+                    00003           ;Es wird der Timer0 mit und ohne Vorteiler geprüft
+                    00004           ;(c) St. Lehmann   Ersterstellung: 23.01.2003
+                    00005           ;19.04.2014 überarbeitet 
+                    00006           ;18.10.2018 mod. für HSO
+                    00007           
+                    00008           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00009           
+                    00010           ;Definition einiger Symbole
+                    00011           indirect equ 0
+                    00012           status   equ 03h
+                    00013           fsr      equ 04h
+                    00014           ra       equ 05h
+                    00015           rb       equ 06h
+                    00016           count    equ 0ch
+                    00017           
+                    00018           ;Definition des Prozessors
+                    00019           device 16F84
+                    00020           ;Festlegen des Codebeginns
+                    00021           org 0
+                    00022  start    
+                    00023           ;zuerst Timer0 intern durch den Befehlstakt erhöhen VT = 1:4
+                    00024           ;somit wird nach jedem 4. Befehlstakt (Achtung GOTO etc) TMR0 erhöht
+0000 3001           00025           movlw 00000001B     ;Option-Register entsp. initialisieren
+0001 1683           00026           bsf status,5        ;Bank umschalten
+0002 0081           00027           movwf 1             ;Option-Register
+0003 1283           00028           bcf status,5
+0004 3001           00029           movlw 1             ;Timer 1 auf 1
+0005 0081           00030           movwf 1
+0006 0190           00031           clrf 10h            ;zähler
+                    00032  loop1    
+0007 0000           00033           nop
+0008 0000           00034           nop
+0009 0000           00035           nop
+000A 0A90           00036           incf 10h
+000B 0801           00037           movf 1,w            ;lese Timerwert aus
+000C 1D03           00038           btfss status,2      ;wenn Timer = 0, dann fertig
+000D 2807           00039           goto loop1
+                    00040           ;num muss 80H in 10h stehen
+                    00041           
+                    00042           ;nun mit einem VT = 1:16         
+                    00043           ;somit wird nach jedem 16. Befehlstakt (Achtung GOTO etc) TMR0 erhöht
+000E 3003           00044           movlw 00000011B     ;Option-Register entsp. initialisieren
+000F 1683           00045           bsf status,5        ;Bank umschalten
+0010 0081           00046           movwf 1             ;Option-Register
+0011 1283           00047           bcf status,5
+0012 3001           00048           movlw 1             ;Timer 1 auf 1
+0013 0081           00049           movwf 1
+0014 0190           00050           clrf 10h            ;zähler
+                    00051  loop2    
+0015 0A90           00052           incf 10h
+0016 0801           00053           movf 1,w            ;lese Timerwert aus
+0017 1D03           00054           btfss status,2      ;wenn Timer = 0, dann fertig
+0018 2815           00055           goto loop2
+                    00056           ;num muss 31H in 10h stehen
+                    00057           ;*****************************************************************
+                    00058           ;jetzt wird der Timer0 durch den externen Takt an RA4 hochgezählt.
+                    00059           ;zuerst ohne VT, damit zählt jede fallende Flanke an RA
+0019 3038           00060           movlw 00111000B     ;Option-Register initialisieren
+001A 1683           00061           bsf status,5
+001B 0081           00062           movwf 1             ;Wert ins Option-Register
+001C 1283           00063           bcf status,5
+001D 0181           00064           clrf 1              ;Timer löschen
+                    00065  loop3    
+001E 1E01           00066           btfss 1,4           ;bis im Timer0 der Wert 16 erreicht wird
+001F 281E           00067           goto loop3
+                    00068           
+                    00069           ;jetzt auch mit VT 1:4, damit zählt jede 4. fallende Flanke an RA
+0020 3031           00070           movlw 00110001B     ;Option-Register initialisieren
+0021 1683           00071           bsf status,5
+0022 0081           00072           movwf 1             ;Wert ins Option-Register
+0023 1283           00073           bcf status,5
+0024 0181           00074           clrf 1              ;Timer löschen
+                    00075  loop4    
+0025 1D81           00076           btfss 1,3           ;bis im Timer0 der Wert 8 erreicht wird
+0026 2825           00077           goto loop4
+                    00078             
+                    00079           ;******************************************************************
+                    00080           
+                    00081  ende     
+0027 2827           00082           goto ende           ;Endlosschleife, verhindert Nirwana
+                    00083           
+                    00084             

@@ -1,0 +1,116 @@
+                    00001           ;TPicSim8
+                    00002           ;Programm zum Test des 16F84-Simulators.
+                    00003           ;Es werden die Interrupts für TMR0, RB0 (INT) und RB4-7 geprüft
+                    00004           ;(c) St. Lehmann  
+                    00005           ;19.04.2014 
+                    00006           
+                    00007           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00008             
+                    00009           ;Definition einiger Symbole
+                    00010           indirect equ 0
+                    00011           status   equ 03h
+                    00012           fsr      equ 04h
+                    00013           ra       equ 05h
+                    00014           rb       equ 06h
+                    00015           intcon   equ 0bh
+                    00016           
+                    00017           ;Definition des Prozessors
+                    00018           device 16F84
+                    00019           ;Festlegen des Codebeginns
+                    00020           org 0
+                    00021  start    
+0000 281C           00022           goto main
+                    00023           ;Interrupt-Service-Routine ISR muss an Adresse 4 stehen, deshalb die 3 NOPs
+0001 0000           00024           nop
+0002 0000           00025           nop
+0003 0000           00026           nop
+                    00027           
+                    00028  ISR        
+0004 1D0B           00029           btfss intcon,2      ;war es ein Timer-Interrupt?
+0005 280B           00030           goto isr1           ;nein
+0006 3054           00031           movlw 54h           ;ja, 54h = T in 20h schreiben
+0007 00A0           00032           movwf 20h
+0008 128B           00033           bcf intcon,5        ;Timer-Interrupt sperren
+0009 110B           00034           bcf intcon,2        ;Interrupt-Flag zurücksetzen
+000A 281B           00035           goto isrend
+                    00036  ISR1     
+000B 1C8B           00037           btfss intcon,1      ;war es ein RB0-Interrupt?
+000C 2812           00038           goto isr2           ;nein
+000D 3049           00039           movlw 'I'           ;schreibe ein I an 21h
+000E 00A1           00040           movwf 21h
+000F 120B           00041           bcf intcon,4        ;RB0-Interrupt sperren
+0010 108B           00042           bcf intcon,1        ;RB0-Interrupt-Flag löschen
+0011 281B           00043           goto isrend
+                    00044  ISR2     
+0012 1C0B           00045           btfss intcon,0      ;war es ein RB4-7 Interrupt?
+0013 2819           00046           goto isr3           ;dürfte nie passieren
+0014 3052           00047           movlw 'R'           ;schreibe ein R nach 22h
+0015 00A2           00048           movwf 22h
+0016 118B           00049           bcf intcon,3        ;keine RB4-7 Interrupts erlauben
+0017 100B           00050           bcf intcon,0        ;auch das Flag löschen
+0018 281B           00051           goto isrend
+                    00052  ISR3     
+0019 3046           00053           movlw 'F'           ;Fehlermeldung
+001A 00A3           00054           movwf 23h
+                    00055             
+                    00056  isrend   
+001B 0009           00057           retfie              ;Ende der Inetrrupt-Service-Routine
+                    00058             
+                    00059             
+                    00060  main:      
+                    00061           ;Der TMR0 wird vom Befehlstakt incrementiert. beim Überlauf wird ein Interrupt ausgelöst
+001C 3001           00062           movlw 00000001B     ;Option-Register entsp. initialisieren
+001D 1683           00063           bsf status,5        ;Bank umschalten
+001E 0081           00064           movwf 1             ;Option-Register
+001F 1283           00065           bcf status,5
+0020 3020           00066           movlw 20h           ;nur Timer-Interrupt erlauben
+0021 008B           00067           movwf intcon
+0022 178B           00068           bsf intcon,7        ;Globale Freigabe, ab jetzt kann ein Interrupt durchkommen
+                    00069  loop1    
+0023 1A8B           00070           btfsc intcon,5      ;fertig, wenn ISR dieses Bit zurücksetzt
+0024 2823           00071           goto loop1          ;bis Timer überläuft
+                    00072           
+                    00073           ;zuerst die wirksame Flanke für RB0 festlegen (hier die fallende Flanke)
+0025 300F           00074           movlw 00001111b
+0026 1683           00075           bsf status,5
+0027 0081           00076           movwf 1
+0028 1283           00077           bcf status,5
+                    00078           ;nun den RB0-Interrupt freigeben, Rest sperren
+0029 3010           00079           movlw 10h                    
+002A 008B           00080           movwf intcon
+002B 178B           00081           bsf intcon,7
+                    00082  loop2    
+002C 1A0B           00083           btfsc intcon,4
+002D 282C           00084           goto loop2
+                    00085             
+                    00086           ;Beim RB4-7 Interrupts wird ein Flankenwechsel nur an den Pins die als Eingang arbeiten erkannt
+002E 3008           00087           movlw 08h           ;RB4-7 Interrupt freigeben
+002F 008B           00088           movwf intcon
+0030 178B           00089           bsf intcon,7        ;GIE
+                    00090  loop3    
+0031 198B           00091           btfsc intcon,3      ;wird in ISR zurückgesetzt
+0032 2831           00092           goto loop3                  
+                    00093           
+                    00094           ;das gleiche nochmals, nur sind RB4-6 Ausgänge und werden deshalb ignoriert
+0033 308F           00095           movlw 10001111B
+0034 1683           00096           bsf status,5
+0035 0086           00097           movwf 6             ;TRIS RB
+0036 1283           00098           bcf status,5
+0037 3008           00099           movlw 08h           ;RB4-7 Interrupt freigeben
+0038 008B           00100           movwf intcon        ;aber nur RB7 ist aktiv
+0039 178B           00101           bsf intcon,7        ;GIE
+                    00102  loop4    
+003A 198B           00103           btfsc intcon,3      ;wird in ISR zurückgesetzt
+003B 283A           00104           goto loop4                  
+                    00105             
+                    00106           
+                    00107           ;******************************************************************
+                    00108           ;wenn alles richtig, dann
+                    00109           ;in 20h steht 54H
+                    00110           ;in 21H ein 49H
+                    00111           ;in 22H ein 53H
+                    00112           
+                    00113  ende     
+003C 283C           00114           goto ende           ;Endlosschleife, verhindert Nirwana
+                    00115           
+                    00116             

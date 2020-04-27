@@ -23,8 +23,8 @@ pub fn parse_bin_file(data: &[u8]) -> ParseResult {
 
 pub fn parse_lst_file(data: &str) -> ParseResult {
     // TODO: Better regexes
-    let command_rgx = Regex::new(r"^(\d{4})\s(\d{4})\s+\d+\s{2}(\S*)\s+(.*)$").unwrap();
-    let info_rgx = Regex::new(r"^[^\S\r\n]{20}\d{5}[^\S\r\n]{2}(\S*)[^\S\r\n]+(.*)$").unwrap();
+    let command_rgx = Regex::new(r"^([0-9A-F]{4})\s([0-9A-F]{4})\s+[0-9A-F]+\s{2}(\S*)\s+(.*)$").unwrap();
+    let info_rgx = Regex::new(r"^[^\S\r\n]{20}[0-9A-F]{5}[^\S\r\n]{2}(\S*)[^\S\r\n]+(.*)$").unwrap();
 
     let mut address_info = HashMap::new();
     let mut content = Vec::new();

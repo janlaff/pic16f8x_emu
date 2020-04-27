@@ -1,0 +1,71 @@
+                    00001           ;TPicSim101
+                    00002           ;Programm zum Test des 16F84-Simulators.
+                    00003           ;Es wird die richtige Funktionsweise von PCL und PCLATH am Beispiel
+                    00004           ;eines Tabellenzugriffs getestet
+                    00005           ;(c) St. Lehmann  
+                    00006           ;19.04.2014 
+                    00007           ;18.10.2018 mod. für HSO es wird die Tabelle durch ein ORG 100H auf die
+                    00008           ;                        Adresse 100H gelegt. 
+                    00009           
+                    00010           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00011             
+                    00012           ;Definition einiger Symbole
+                    00013           indirect equ 0
+                    00014           pcl      equ 02h
+                    00015           status   equ 03h
+                    00016           fsr      equ 04h
+                    00017           ra       equ 05h
+                    00018           rb       equ 06h
+                    00019           pclath   equ 0ah
+                    00020           intcon   equ 0bh
+                    00021           
+                    00022           ;Definition des Prozessors
+                    00023           device 16F84
+                    00024           ;Festlegen des Codebeginns
+                    00025           org 0
+                    00026  start    
+0000 3000           00027           movlw 0             ;Index für Tabellenzugriff in 0FH
+0001 008F           00028           movwf 0fh
+0002 3005           00029           movlw 5             ;insgesamt 5 Tabellenzugriffe
+0003 008E           00030           movwf 0eh
+0004 3010           00031           movlw 10h           ;Ergebnis wird ab 10H abgespeichert
+0005 0084           00032           movwf fsr
+                    00033  loop     
+0006 3001           00034           movlw 1             ;PCLATH setzen, damit auf den Bereich 256-511 zugegriffen werden kann
+0007 008A           00035           movwf pclath
+0008 080F           00036           movf 0fh,w         
+0009 2100           00037           call tabelle
+000A 0080           00038           movwf indirect
+000B 0A84           00039           incf fsr
+000C 0A8F           00040           incf 0fh
+000D 0B8E           00041           decfsz 0eh
+000E 2806           00042           goto loop
+000F 018A           00043           clrf pclath
+0010 080F           00044           movf 0fh,w
+0011 2100           00045           call tabelle        ;Fehler, der ADDWF PCL kommt nicht in die Tabelle. Grund: in W steht 5
+                    00046           ;im PC 109 bzw. nach dem Fetch 10A. Zu diesem Wert wird 5 addiert und
+                    00047           ;die oberen Bits auf 0 gesetzt (PCLATH=0). Damit steht im PC der Wert
+                    00048           ;0Fh. Dorthin springt der PIC durch den ADDWF-Befehl. Hier verweilt
+                    00049           ;das Programm während der Stack immer weiter wächst.
+                    00050             
+                    00051           
+                    00052  ende     
+0012 2812           00053           goto ende           ;Endlosschleife, verhindert Nirwana
+                    00054           
+                    00055           org 100H
+                    00056  Tabelle  
+0100 0782           00057           addwf pcl         
+0101 3460           00058           retlw 60h
+0102 3461           00059           retlw 61h
+0103 3462           00060           retlw 62h
+0104 3463           00061           retlw 63h
+0105 3464           00062           retlw 64h
+0106 3465           00063           retlw 65h
+0107 3466           00064           retlw 66h
+0108 3467           00065           retlw 67h
+0109 3468           00066           retlw 68h
+010A 3469           00067           retlw 69h
+010B 346A           00068           retlw 6Ah
+                    00069             
+                    00070           
+                    00071             

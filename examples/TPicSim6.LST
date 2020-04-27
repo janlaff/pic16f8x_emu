@@ -1,0 +1,95 @@
+                    00001           ;TPicSim6
+                    00002           ;Programm zum Test des 16F84-Simulators.
+                    00003           ;Es werden die Byte-orientieren File-Register-Befehle im 
+                    00004           ;Zusammenhang mit der indirekten Adressierung geprüft
+                    00005           ;
+                    00006           ;(c) St. Lehmann
+                    00007           ;Ersterstellung: 23.03.2016
+                    00008           
+                    00009           ;Hinweis:
+                    00010           ;Bei der indirekten Adressierung werden die Register "IND" oder auch als
+                    00011           ;"indirect" bezeichnet und das Register FSR (File Select Register)
+                    00012           ;benutzt. Dabei beinhaltet das FSR-Register die Zieladresse in die etwas
+                    00013           ;geschrieben oder von der etwas gelesen werden soll. Der eigentliche 
+                    00014           ;Zugriff erfolgt über das Ansprechen der Registeradresse 0 (IND). Der PIC
+                    00015           ;ersetzt in dem Falle die Adresse 0 durch die Adresse im FSR-Register.
+                    00016           ;Da die Adresse im FSR-Register 8-Bit umfasst, die Adresse bei der direkten
+                    00017           ;Adressierung jedoch nur 7 Bit, kann man durch die indirekte Adressierung
+                    00018           ;auch auf Bank 1 zugreifen ohne das RP0-Bit zu setzen.
+                    00019           ;
+                    00020           ;Bei diesen Befehlen entscheidet das d-Bit (Destination), ob das Ergebnis
+                    00021           ;dieser Operation ins W- oder File-Register geschrieben wird. Wird im
+                    00022           ;Assemblercode der Befehl mit ",W" geschrieben, bedeutet dies, dass das
+                    00023           ;d-Bit 0 ist und das Ergebnis ins W-Register kommt. Fehlt ",W" ist das 
+                    00024           ;d-Bit 1 und das Ergebnis wird ins Fileregister geschrieben.
+                    00025           ;
+                    00026           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00027           
+                    00028           ;Definition einiger Symbole
+                    00029           ;zuerst Hardware-Register
+                    00030           indirect equ 00h
+                    00031           status   equ 03h
+                    00032           fsr      equ 04h
+                    00033           ra       equ 05h
+                    00034           rb       equ 06h
+                    00035           
+                    00036           ;für den Benutzer frei verwendbare Register
+                    00037           wert1    equ 0ch             ;Variable Nr.1
+                    00038           wert2    equ 0dh             ;Variable Nr.2
+                    00039           ergeb    equ 0eh             ;Variable Nr.3
+                    00040           
+                    00041           ;Definition des Prozessors
+                    00042           device 16F84
+                    00043             
+                    00044           ;Festlegen des Codebeginns
+                    00045           org 0
+                    00046  loop     
+0000 3020           00047           movlw 20h           ;in W steht nun 20h, DC=?, C=?, Z=?
+0001 008C           00048           movwf wert1         ;diesen Wert abspeichern, DC=?, C=?, Z=?
+0002 3010           00049           movlw 10h           ;W = 10h, DC=?, C=?, Z=?
+0003 0084           00050           movwf fsr           ;W=10h, FSR=10h, wert1=20h, wert2=?? , DC=?, C=?, Z=?
+0004 008D           00051           movwf wert2         ;W=10h, FSR=10h, wert1=20h, wert2=10h, DC=?, C=?, Z=?
+0005 080C           00052           movf wert1,w        ;W=20h
+                    00053           ;der Speicherbereich von 10h bis 1Fh wird mit Zahlen 20h, 21h, etc. gefüllt
+                    00054  loop1      
+0006 0080           00055           movwf indirect      ;W=20h, FSR=10h, F10=20h
+0007 3E01           00056           addlw 1             ;W=20h, 21h, 22h, etc
+0008 0A84           00057           incf fsr            ;FSR=11h, 12h, etc
+0009 0B8D           00058           decfsz wert2
+000A 2806           00059           goto loop1
+                    00060             
+000B 301F           00061           movlw 1fh           ;FSR-Zeiger wieder auf Anfang stellen
+000C 0084           00062           movwf fsr
+000D 30F0           00063           movlw 0f0h
+000E 008D           00064           movwf wert2
+000F 0100           00065           clrw
+                    00066  loop2    
+0010 0700           00067           addwf indirect,w
+0011 0384           00068           decf fsr
+0012 0F8D           00069           incfsz wert2
+0013 2810           00070           goto loop2
+                    00071           ;im W-Register muss 78h stehen
+0014 008D           00072           movwf wert2
+0015 0A84           00073           incf fsr
+0016 0C80           00074           rrf indirect        ;F10=10h
+0017 0A80           00075           incf indirect       ;F10=11h
+0018 0C80           00076           rrf indirect        ;F10=08h, C=1
+0019 1780           00077           bsf indirect,7      ;F10=88h
+001A 1003           00078           bcf status,0        ;C=0                             
+001B 0D80           00079           rlf indirect        ;F10=10h, C=1
+001C 0A84           00080           incf fsr            ;fsr=11h
+001D 0D80           00081           rlf indirect        ;F11=43h, C=0
+001E 0E80           00082           swapf indirect      ;F11=34h
+001F 0680           00083           xorwf indirect      ;F11=4Ch
+0020 1A80           00084           btfsc indirect,5
+0021 2800           00085           goto loop
+0022 1D00           00086           btfss indirect,2
+0023 2800           00087           goto loop
+0024 1980           00088           btfsc indirect,3
+0025 2827           00089           goto ende
+0026 2800           00090           goto loop
+                    00091           
+                    00092  ende     
+0027 2827           00093           goto ende           ;Endlosschleife, verhindert Nirwana
+                    00094           
+                    00095             

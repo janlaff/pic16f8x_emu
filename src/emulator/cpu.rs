@@ -87,7 +87,7 @@ impl CPU {
                 set_bit_enabled(&mut self.data_bus.sfr_bank.status, Z, result == 0);
                 set_bit_enabled(&mut self.data_bus.sfr_bank.status, C, result >= 0);
 
-                let dc = (((value & 0xf) + (!self.data_bus.sfr_bank.w + 1)) & 0xF0) != 0;
+                let dc = (((value & 0xf) + ((!self.data_bus.sfr_bank.w + 1)) & 0xf) & 0xf0) != 0;
                 set_bit_enabled(&mut self.data_bus.sfr_bank.status, DC, dc);
 
                 self.data_bus.sfr_bank.w = result;
@@ -102,10 +102,18 @@ impl CPU {
                 set_bit_enabled(&mut self.data_bus.sfr_bank.status, Z, result == 0);
                 set_bit_enabled(&mut self.data_bus.sfr_bank.status, C, carry);
 
-                let dc = (((value & 0xf) + self.data_bus.sfr_bank.w) & 0xF0) != 0;
+                let dc = (((value & 0xf) + (self.data_bus.sfr_bank.w & 0xf)) & 0xF0) != 0;
                 set_bit_enabled(&mut self.data_bus.sfr_bank.status, DC, dc);
 
                 self.data_bus.sfr_bank.w = result;
+            }
+            Instruction::Call(Address(idx)) => {
+                self.data_bus.stack.push(self.data_bus.get_pc() + 1);
+                self.data_bus.load_pc(idx - 1);
+            }
+            Instruction::Return => {
+                let pc = self.data_bus.stack.pop().unwrap();
+                self.data_bus.load_pc(pc);
             }
             _ => {}
         };

@@ -66,6 +66,7 @@ impl SfrBank {
 
 pub struct DataBus {
     pub memory: [u8; 0x80],
+    pub stack: Vec<u16>,
     pub sfr_bank: SfrBank,
 }
 
@@ -73,11 +74,12 @@ impl DataBus {
     pub fn new() -> Self {
         Self {
             memory: [0; 0x80],
+            stack: Vec::new(),
             sfr_bank: SfrBank::new(),
         }
     }
 
-    pub fn load_pc(&mut self, value: u16) {
+    pub fn load_pc(&mut self, mut value: u16) {
         // When loading pc from GOTO or CALL instruction
         // The upper two bits are being ignored
         // -> only 11 bits from value are loaded

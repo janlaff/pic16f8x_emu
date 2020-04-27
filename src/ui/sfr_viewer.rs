@@ -13,7 +13,7 @@ pub enum SfrMsg {
 pub struct SfrViewer {
     link: ComponentLink<Self>,
     context: Box<dyn Bridge<CPUAgent>>,
-    localSfrs: SfrBank,
+    local_sfrs: SfrBank,
 }
 
 impl Component for SfrViewer {
@@ -25,7 +25,7 @@ impl Component for SfrViewer {
         Self {
             link,
             context: CPUAgent::bridge(callback),
-            localSfrs: SfrBank::new(),
+            local_sfrs: SfrBank::new(),
         }
     }
 
@@ -43,7 +43,7 @@ impl Component for SfrViewer {
                 true
             }
             SfrMsg::ContextMsg(Response::FetchedSfrs(sfrs)) => {
-                self.localSfrs = sfrs;
+                self.local_sfrs = sfrs;
                 true
             }
             _ => false,
@@ -52,23 +52,23 @@ impl Component for SfrViewer {
 
     fn view(&self) -> Html {
         let sfr_data = vec![
-            ("W", self.localSfrs.w),
-            ("INDIRECT", self.localSfrs.indirect),
-            ("PCL", self.localSfrs.pcl),
-            ("STATUS", self.localSfrs.status),
-            ("FSR", self.localSfrs.fsr),
-            ("PCLATH", self.localSfrs.pclath),
-            ("INTCON", self.localSfrs.intcon),
-            ("TMR0", self.localSfrs.tmr0),
-            ("PORTA", self.localSfrs.porta),
-            ("PORTB", self.localSfrs.portb),
-            ("EEDATA", self.localSfrs.eedata),
-            ("EEADR", self.localSfrs.eeadr),
-            ("OPTION", self.localSfrs.option),
-            ("TRISA", self.localSfrs.trisa),
-            ("TRISB", self.localSfrs.trisb),
-            ("EECON1", self.localSfrs.eecon1),
-            ("EECON2", self.localSfrs.eecon2),
+            ("W", self.local_sfrs.w),
+            ("INDIRECT", self.local_sfrs.indirect),
+            ("PCL", self.local_sfrs.pcl),
+            ("STATUS", self.local_sfrs.status),
+            ("FSR", self.local_sfrs.fsr),
+            ("PCLATH", self.local_sfrs.pclath),
+            ("INTCON", self.local_sfrs.intcon),
+            ("TMR0", self.local_sfrs.tmr0),
+            ("PORTA", self.local_sfrs.porta),
+            ("PORTB", self.local_sfrs.portb),
+            ("EEDATA", self.local_sfrs.eedata),
+            ("EEADR", self.local_sfrs.eeadr),
+            ("OPTION", self.local_sfrs.option),
+            ("TRISA", self.local_sfrs.trisa),
+            ("TRISB", self.local_sfrs.trisb),
+            ("EECON1", self.local_sfrs.eecon1),
+            ("EECON2", self.local_sfrs.eecon2),
         ];
 
         let render_sfr = |(label, value): &(&str, u8)| {

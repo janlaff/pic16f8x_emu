@@ -1,17 +1,17 @@
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
-pub struct DestinationFlag(bool);
+pub struct DestinationFlag(pub bool);
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
-pub struct FileRegister(u8);
+pub struct FileRegister(pub u8);
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
-pub struct BitIndex(usize);
+pub struct BitIndex(pub usize);
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct Address(pub u16);
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
-pub struct Literal(u8);
+pub struct Literal(pub u8);
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub enum InstructionCategory {

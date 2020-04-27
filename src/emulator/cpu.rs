@@ -22,6 +22,11 @@ impl CPU {
         }
     }
 
+    pub fn run(&mut self, mut dispatcher: Dispatcher<CPUAgent>) -> Result<(), String> {
+        // TODO: implement clock
+        Ok(Default::default())
+    }
+
     pub fn step(&mut self, mut dispatcher: Dispatcher<CPUAgent>) -> Result<(), String> {
         let pc = self.data_bus.get_pc();
         let result = self.rom_bus.read_instruction(pc);
@@ -50,10 +55,23 @@ impl CPU {
     fn execute(&mut self, instruction: Instruction, dispatcher: &mut Dispatcher<CPUAgent>) {
         self.jump_performed = false;
         // TODO: Implement instructions
+
         match instruction {
             Instruction::Goto(Address(idx)) => {
                 self.data_bus.load_pc(idx);
                 self.jump_performed = true
+            }
+            Instruction::MovLw(Literal(value)) => {
+                self.data_bus.sfr_bank.w = value;
+            }
+            Instruction::BsF(FileRegister(destination), BitIndex(idx)) => {
+                self.data_bus.set_bit(destination, idx);
+            }
+            Instruction::MovWf(FileRegister(destination)) => {
+                self.data_bus.write_byte(destination, self.data_bus.sfr_bank.w);
+            }
+            Instruction::BcF(FileRegister(destination), BitIndex(idx)) => {
+                self.data_bus.clear_bit(destination, idx);
             }
             _ => {}
         };

@@ -21,11 +21,10 @@ You can try the live version right now in your browser
 ## Dependencies
 - Rust Compiler (https://www.rust-lang.org/tools/install)
 - Rust nightly toolchain (`rustup install nightly`)
-- rollup (`npm i -g rollup`)
+- NPM (https://nodejs.org)
 
 ## Build & Run
 ```
-$ rustup nightly run wasm-pack build --target web
-$ rollup main.js --file bundle.js --format iife
-$ python -m http.server
+$ npm install
+$ npm run start:dev
 ```

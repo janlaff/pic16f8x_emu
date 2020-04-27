@@ -108,10 +108,15 @@ impl CPU {
                 self.data_bus.sfr_bank.w = result;
             }
             Instruction::Call(Address(idx)) => {
-                self.data_bus.stack.push(self.data_bus.get_pc() + 1);
+                self.data_bus.stack.push(self.data_bus.get_pc());
                 self.data_bus.load_pc(idx - 1);
             }
             Instruction::Return => {
+                let pc = self.data_bus.stack.pop().unwrap();
+                self.data_bus.load_pc(pc);
+            }
+            Instruction::RetLw(Literal(value)) => {
+                self.data_bus.sfr_bank.w = value;
                 let pc = self.data_bus.stack.pop().unwrap();
                 self.data_bus.load_pc(pc);
             }

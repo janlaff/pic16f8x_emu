@@ -1,0 +1,78 @@
+* {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
+}
+
+body {
+  background-color: black;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+#dashboard {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  padding: 10px;
+}
+
+#memory-viewer {
+  padding: 10px;
+}
+
+#sfr-viewer {
+  padding: 10px;
+  margin-top: 10px;
+}
+
+#program-viewer {
+  padding: 10px;
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  height: 1px; /* Weirdest fix ever xD */
+}
+
+#program-content {
+  overflow-y: auto;
+}
+
+#program-scroll-wrapper {
+  flex: 1;
+  overflow-y: auto;
+}
+
+#right-side {
+  display: flex;
+  flex-direction: column;
+}
+
+#left-side {
+  display: flex;
+  flex-direction: column;
+}
+
+#controls {
+  padding: 10px;
+}
+
+.active {
+  background-color: white;
+  color: black;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  background: black;
+}
+
+::-webkit-scrollbar-track {
+  background: white;
+  border: 5px solid black;
+}
+
+::-webkit-scrollbar-thumb {
+  background: white;
+}

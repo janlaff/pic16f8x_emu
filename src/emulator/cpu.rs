@@ -49,6 +49,7 @@ impl CPU {
 
         dispatcher.send(Request::FetchSfrs);
         dispatcher.send(Request::UpdateMemory(PCL_ADDR, self.data_bus.sfr_bank.pcl));
+        dispatcher.send(Request::UpdateMemory(STATUS_ADDR, self.data_bus.sfr_bank.status));
 
         Ok(())
     }

@@ -1,11 +1,11 @@
                     00001           ;TPicSim3
                     00002           ;Programm zum Test des 16F84-Simulators.
-                    00003           ;Es werden die Byte-orientieren File-Register Befehle geprüft
+                    00003           ;Es werden die Byte-orientieren File-Register Befehle geprft
                     00004           ;aber kein DECFSZ, INCFSZ, RLF, RRF
                     00005           ;(c) St. Lehmann
                     00006           ;Ersterstellung: 23.03.2016
                     00007           ;Korrekturen: 09.05.2017 (Fehler gefunden durch: Dominik Vogel)
-                    00008           ;mod. 18.10.2018 für HSO
+                    00008           ;mod. 18.10.2018 fr HSO
                     00009           
                     00010           ;Hinweis:
                     00011           ;Bei diesen Befehlen entscheidet das d-Bit (Destination), ob das Ergebnis
@@ -14,13 +14,13 @@
                     00014           ;d-Bit 0 ist und das Ergebnis ins W-Register kommt. Fehlt ",W" ist das 
                     00015           ;d-Bit 1 und das Ergebnis wird ins Fileregister geschrieben.
                     00016           ;
-                    00017           ;Alle Befehle die eine Fileregister-Adresse haben, können auch "indirekt"
+                    00017           ;Alle Befehle die eine Fileregister-Adresse haben, knnen auch "indirekt"
                     00018           ;adressieren. Dies ist im Testfile TPicSim6.LST beschrieben.
                     00019           ;
-                    00020           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00020           list c=132          ;Zeilenlnge im LST auf 132 Zeichen setzen
                     00021           
                     00022           ;Definition einiger Symbole
-                    00023           ;für den Benutzer frei verwendbare Register
+                    00023           ;fr den Benutzer frei verwendbare Register
                     00024           wert1    equ 0ch             ;Variable Nr.1
                     00025           wert2    equ 0dh             ;Variable Nr.2
                     00026           ergeb    equ 0eh             ;Variable Nr.3

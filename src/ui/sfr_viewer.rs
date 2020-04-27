@@ -55,7 +55,6 @@ impl Component for SfrViewer {
             ("W", self.local_sfrs.w),
             ("INDIRECT", self.local_sfrs.indirect),
             ("PCL", self.local_sfrs.pcl),
-            ("STATUS", self.local_sfrs.status),
             ("FSR", self.local_sfrs.fsr),
             ("PCLATH", self.local_sfrs.pclath),
             ("INTCON", self.local_sfrs.intcon),
@@ -71,11 +70,39 @@ impl Component for SfrViewer {
             ("EECON2", self.local_sfrs.eecon2),
         ];
 
+        let bit_regs = vec![
+            ("STATUS", self.local_sfrs.status, ["IRP", "RP1", "RP0", "TO", "PD", "Z", "DC", "C"])
+        ];
+
         let render_sfr = |(label, value): &(&str, u8)| {
             html! {
                 <tr>
                     <td>{ label }</td>
                     <td>{ hex::encode([*value]) }</td>
+                </tr>
+            }
+        };
+
+        let render_bit_register = |(label, value, bits): &(&str, u8, [&str; 8])| {
+            html! {
+                <tr>
+                    <td>{label}</td>
+                    <td>
+                        <table class="nes-table is-bordered is-dark">
+                            <tbody>
+                                <tr>
+                                    {for (0...7).map(|idx| html! {
+                                        <td>{ bits[idx] }</td>
+                                    })}
+                                </tr>
+                                <tr>
+                                    {for (0...7).map(|idx| html! {
+                                        <td>{ hex::encode([get_bit(*value, 7 - idx) as u8]) }</td>
+                                    })}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                 </tr>
             }
         };
@@ -86,6 +113,7 @@ impl Component for SfrViewer {
                 <table>
                     <tbody>
                         { for sfr_data.iter().map(render_sfr) }
+                        { for bit_regs.iter().map(render_bit_register) }
                     </tbody>
                 </table>
             </div>

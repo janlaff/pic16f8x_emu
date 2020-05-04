@@ -68,9 +68,14 @@ impl Agent for CPUAgent {
             }
             Request::Step => {
                 self.console.log("Running experimental step");
-                // TODO: find sth better to pass, that can respond directly to all handlers
-                if let Err(err) = self.cpu.step(Self::dispatcher()) {
+                if let Err(err) = self.cpu.step() {
                     self.dialog.alert(err.as_str());
+                }
+
+                for id in &self.handlers {
+                    self.link.respond(*id, Response::FetchedMemory(self.cpu.data_bus.memory.to_vec()));
+                    self.link.respond(*id, Response::FetchedSfrs(self.cpu.data_bus.sfr_bank));
+                    self.link.respond(*id, Response::UpdatedMemory(PCL_ADDR, self.cpu.data_bus.sfr_bank.pcl));
                 }
             }
             Request::Stop => {

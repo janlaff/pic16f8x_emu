@@ -23,18 +23,18 @@ impl CPU {
         }
     }
 
-    pub fn run(&mut self, mut dispatcher: Dispatcher<CPUAgent>) -> Result<(), String> {
+    pub fn run(&mut self) -> Result<(), String> {
         // TODO: implement clock
         Ok(Default::default())
     }
 
-    pub fn step(&mut self, mut dispatcher: Dispatcher<CPUAgent>) -> Result<(), String> {
+    pub fn step(&mut self) -> Result<(), String> {
         let pc = self.data_bus.get_pc();
         let result = self.rom_bus.read_instruction(pc);
 
         if let Ok(instr) = result {
             debug!("Executing {:?}", instr);
-            self.execute(instr, &mut dispatcher);
+            self.execute(instr);
         } else {
             return Err(result.err().unwrap());
         }
@@ -47,14 +47,10 @@ impl CPU {
             1
         };
 
-        dispatcher.send(Request::FetchSfrs);
-        dispatcher.send(Request::UpdateMemory(PCL_ADDR, self.data_bus.sfr_bank.pcl));
-        dispatcher.send(Request::UpdateMemory(STATUS_ADDR, self.data_bus.sfr_bank.status));
-
         Ok(())
     }
 
-    fn execute(&mut self, instruction: Instruction, dispatcher: &mut Dispatcher<CPUAgent>) {
+    fn execute(&mut self, instruction: Instruction) {
         self.jump_performed = false;
         // TODO: Implement instructions
 
@@ -88,7 +84,7 @@ impl CPU {
                 set_bit_enabled(&mut self.data_bus.sfr_bank.status, Z, result == 0);
                 set_bit_enabled(&mut self.data_bus.sfr_bank.status, C, result >= 0);
 
-                let dc = (((value & 0xf) + ((!self.data_bus.sfr_bank.w + 1)) & 0xf) & 0xf0) != 0;
+                let dc = (((value & 0xf) + ((!self.data_bus.sfr_bank.w + 1))) & 0xf0) != 0;
                 set_bit_enabled(&mut self.data_bus.sfr_bank.status, DC, dc);
 
                 self.data_bus.sfr_bank.w = result;
@@ -103,7 +99,7 @@ impl CPU {
                 set_bit_enabled(&mut self.data_bus.sfr_bank.status, Z, result == 0);
                 set_bit_enabled(&mut self.data_bus.sfr_bank.status, C, carry);
 
-                let dc = (((value & 0xf) + (self.data_bus.sfr_bank.w & 0xf)) & 0xF0) != 0;
+                let dc = (((value & 0xf) + (self.data_bus.sfr_bank.w)) & 0xF0) != 0;
                 set_bit_enabled(&mut self.data_bus.sfr_bank.status, DC, dc);
 
                 self.data_bus.sfr_bank.w = result;
